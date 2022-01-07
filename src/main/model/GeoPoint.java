@@ -13,6 +13,11 @@ public class GeoPoint {
         this.lon = lon;
     }
 
+    @Override
+    public String toString() {
+        return "lat=" + lat + ", lon=" + lon;
+    }
+
     public double getLatitude() {
         return lat;
     }

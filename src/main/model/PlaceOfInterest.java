@@ -1,7 +1,20 @@
 package model;
 
-// Represent a point of interest that has a name, location, and visiting status.
-public class PlaceOfInterest {
+
+/* CPSC 210 Term Project Version 2:
+ * Travel Record - PlaceOfInterest Class
+ * Author: Yun Xing
+ * Date: January 06, 2022
+ *
+ * Represent a point of interest that has a name, location, and visiting status.
+ * User should be able to construct an instance with name and location.
+ * PlaceOfInterest is writable class can be written to external files.
+ */
+
+import org.json.JSONObject;
+import persistence.Writable;
+
+public class PlaceOfInterest implements Writable {
 
     private String name;
     private GeoPoint location;
@@ -36,5 +49,21 @@ public class PlaceOfInterest {
     //          false if NotVISITED
     public boolean beenTo() {
         return visitingStatus == State.VISITED;
+    }
+
+    @Override
+    public String toString() {
+        return "PlaceOfInterest{" + "name='" + name + '\''
+                + ", location=" + location + ", visitingStatus=" + visitingStatus + '}';
+    }
+
+    // EFFECTS: return a JSONObject representing a PlaceOfInterest
+    @Override
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("name", name);
+        json.put("location", location.toString());
+        json.put("status", visitingStatus);
+        return json;
     }
 }

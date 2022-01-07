@@ -15,7 +15,7 @@ public class GeoPoint {
 
     @Override
     public String toString() {
-        return "lat=" + lat + ", lon=" + lon;
+        return lat + "/" + lon;
     }
 
     public double getLatitude() {

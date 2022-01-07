@@ -7,8 +7,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class PlaceOfInterestTest {
 
-    private PlaceOfInterest placeOfInterest;
-    private GeoPoint location;
+    private PlaceOfInterest place;
+    private GeoPoint point;
     private State visited;
 
     private static final String NAME = "UBC Campus";
@@ -20,33 +20,51 @@ class PlaceOfInterestTest {
 
     @BeforeEach
     void runBefore() {
-        location = new GeoPoint(LAT, LON);
-        placeOfInterest = new PlaceOfInterest(NAME, location);
+        point = new GeoPoint(LAT, LON);
+        place = new PlaceOfInterest(NAME, point);
         visited = State.VISITED;
     }
 
     @Test
     void testConstructor() {
-        assertEquals(NAME, placeOfInterest.getName());
-        assertEquals(LAT, placeOfInterest.getLocation().getLatitude());
-        assertEquals(LON, placeOfInterest.getLocation().getLongitude());
-        assertEquals(State.NotVISITED, placeOfInterest.getVisitingStatus());
-        assertEquals(NotVISITED, placeOfInterest.getVisitingStatus().getDisplayString());
-        assertNotEquals(VISITED, placeOfInterest.getVisitingStatus().getDisplayString());
+        assertEquals(NAME, place.getName());
+        assertEquals(LAT, place.getLocation().getLatitude());
+        assertEquals(LON, place.getLocation().getLongitude());
+        assertEquals(State.NotVISITED, place.getVisitingStatus());
+        assertEquals(NotVISITED, place.getVisitingStatus().getDisplayString());
+        assertNotEquals(VISITED, place.getVisitingStatus().getDisplayString());
     }
 
     @Test
     void testSetVisitingStatus() {
-        assertEquals(State.NotVISITED, placeOfInterest.getVisitingStatus());
-        placeOfInterest.setVisitingStatus(visited);
-        assertEquals(State.VISITED, placeOfInterest.getVisitingStatus());
+        assertEquals(State.NotVISITED, place.getVisitingStatus());
+        place.setVisitingStatus(visited);
+        assertEquals(State.VISITED, place.getVisitingStatus());
     }
 
     @Test
     void testBeenTo() {
-        assertFalse(placeOfInterest.beenTo());
-        placeOfInterest.setVisitingStatus(visited);
-        assertTrue(placeOfInterest.beenTo());
+        assertFalse(place.beenTo());
+        place.setVisitingStatus(visited);
+        assertTrue(place.beenTo());
     }
+
+    @Test
+    void testEqualsHashCode() {
+
+        assertEquals(place, place);
+
+        PlaceOfInterest place2 = new PlaceOfInterest(NAME, point);
+        assertEquals(place.hashCode(), place2.hashCode());
+        assertEquals(place, place2);
+
+        assertNotEquals(place, null);
+
+        PlaceOfInterest place3 = new PlaceOfInterest(null, null);
+        assertNotEquals(place.hashCode(), place3.hashCode());
+        assertNotEquals(place, place3);
+    }
+
+
 
 }

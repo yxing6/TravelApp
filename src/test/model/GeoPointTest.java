@@ -6,36 +6,36 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class GeoPointTest {
 
-    private GeoPoint gp;
+    private GeoPoint point;
     private static final double LAT = 200;
     private static final double LON = 200;
 
     @BeforeEach
     void testConstructor() {
-        gp = new GeoPoint(LAT, LON);
-        assertEquals(LAT, gp.getLatitude());
-        assertEquals(LON, gp.getLongitude());
+        point = new GeoPoint(LAT, LON);
+        assertEquals(LAT, point.getLatitude());
+        assertEquals(LON, point.getLongitude());
     }
 
     @Test
     void testEqualsAndHashcode() {
 
-        assertEquals(gp, gp);
+        assertEquals(point, point);
 
-        GeoPoint gp2 = new GeoPoint(LAT, LON);
-        assertEquals(gp.hashCode(), gp2.hashCode());
-        assertEquals(gp, gp2);
+        GeoPoint point2 = new GeoPoint(LAT, LON);
+        assertEquals(point.hashCode(), point2.hashCode());
+        assertEquals(point, point2);
 
-        assertNotEquals(gp, null);
+        assertNotEquals(point, null);
 
-        GeoPoint gp3 = new GeoPoint(LAT+1, LON+1);
-        assertNotEquals(gp.hashCode(), gp3.hashCode());
-        assertNotEquals(gp, gp3);
+        GeoPoint point3 = new GeoPoint(LAT+1, LON+1);
+        assertNotEquals(point.hashCode(), point3.hashCode());
+        assertNotEquals(point, point3);
     }
 
     @Test
     void testToString() {
-        String str = gp.toString();
+        String str = point.toString();
         assertEquals(LAT + "/" + LON, str);
     }
 

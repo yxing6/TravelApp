@@ -123,7 +123,7 @@ public class MyTravelApp {
         if (travelList.getVisitedList().size() == 0) {
             System.out.println("\n\tYour visited list is empty. You have not been to any place... not yet!");
         } else {
-            System.out.println("\n\tThe countries on your visited list are:");
+            System.out.println("\n\tThe places on your visited list are:");
             Set<PlaceOfInterest> visitedPlaces = travelList.getVisitedList();
             viewOneList(visitedPlaces);
         }
@@ -131,7 +131,7 @@ public class MyTravelApp {
         if (travelList.getBucketList().size() == 0) {
             System.out.println("\n\tYour bucket list is empty. Explore where you want to go!");
         } else {
-            System.out.println("\n\tThe countries on your bucket list are:");
+            System.out.println("\n\tThe places on your bucket list are:");
             Set<PlaceOfInterest> bucketPlaces = travelList.getBucketList();
             viewOneList(bucketPlaces);
         }
@@ -140,8 +140,10 @@ public class MyTravelApp {
 
     // EFFECTS: a helper method to print each placeOfInterest in a list
     private void viewOneList(Set<PlaceOfInterest> places) {
+        int i = 1;
         for (PlaceOfInterest p: places) {
-            System.out.println("\t" + p.toString());
+            System.out.println("\t" + i + ": " + p.toString());
+            i++;
         }
     }
 
@@ -177,7 +179,7 @@ public class MyTravelApp {
         if (succeed) {
             System.out.println("\t\t\tPlace successfully added!");
         } else {
-            System.out.println("\t\t\tSame place might already been in your list");
+            System.out.println("\t\t\tSame place might already been in your list... Return to the main menu");
         }
     }
 
@@ -193,7 +195,7 @@ public class MyTravelApp {
             if (succeed) {
                 System.out.println("\t\t\tPlace successfully removed!");
             } else {
-                System.out.println("\t\t\tThere is no such place on your list to remove");
+                System.out.println("\t\t\tThere is no such place on your list to remove... Return to the main menu");
             }
         }
     }
@@ -241,22 +243,6 @@ public class MyTravelApp {
     // EFFECTS: to parse place visiting status based on user input
     private State parseState() {
 
-//        State status = null;
-//        String statusString;
-//
-//        System.out.println("\t\t\tHave you been to this place? Enter y for Yes, n for No: ");
-//        System.out.print("\t\t\t");
-//        statusString = input.next();
-//        statusString = statusString.toLowerCase();
-//        if (statusString.equals("y")) {
-//            status = State.VISITED;
-//        } else if (statusString.equals("n")) {
-//            status = State.NotVISITED;
-//        } else {
-//            System.out.println("\t\t\tSelection not valid... Return to the main menu");
-//        }
-//        return status;
-
         System.out.println("\t\t\tPlease select a state for this place of interest");
 
         int label = 1;
@@ -276,9 +262,9 @@ public class MyTravelApp {
             jsonWriter.open();
             jsonWriter.write(travelList);
             jsonWriter.close();
-            System.out.println("Saved the travel list to " + JSON_STORE);
+            System.out.println("\tSaved the travel list to " + JSON_STORE);
         } catch (FileNotFoundException e) {
-            System.out.println("Unable to write to file: " + JSON_STORE);
+            System.out.println("\tUnable to write to file: " + JSON_STORE);
         }
     }
 
@@ -288,9 +274,9 @@ public class MyTravelApp {
     private void loadTravelList() {
         try {
             travelList = jsonReader.read();
-            System.out.println("Loaded the travel list from " + JSON_STORE);
+            System.out.println("\tLoaded the travel list from " + JSON_STORE);
         } catch (IOException e) {
-            System.out.println("Unable to read from file: " + JSON_STORE);
+            System.out.println("\tUnable to read from file: " + JSON_STORE);
         }
     }
 

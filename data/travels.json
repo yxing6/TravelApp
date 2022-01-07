@@ -1,0 +1,17 @@
+{"places": [
+    {
+        "name": "UBC Campus",
+        "location": "49.2606/-123.246",
+        "status": "VISITED"
+    },
+    {
+        "name": "Summer Palace",
+        "location": "40.0/116.2755",
+        "status": "VISITED"
+    },
+    {
+        "name": "Golden Gate Bridge",
+        "location": "37.8199/-122.4783",
+        "status": "NotVISITED"
+    }
+]}

@@ -1,0 +1,12 @@
+{"places": [
+    {
+        "name": "UBC Campus",
+        "location": "49.2606/-123.246",
+        "status": "NotVISITED"
+    },
+    {
+        "name": "Summer Palace",
+        "location": "40.0/116.2755",
+        "status": "VISITED"
+    }
+]}

@@ -86,8 +86,9 @@ public class PlaceOfInterest implements Writable {
 
     @Override
     public String toString() {
-        return "PlaceOfInterest {" + "name=' " + name + '\''
-                + ", location= " + location + ", visitingStatus= " + visitingStatus + '}';
+        return "{ " + "name: " + name
+                + ", location: latitude = " + location.getLatitude() + " & longitude = " + location.getLongitude()
+                + ", visiting status: " + visitingStatus + '}';
     }
 
 

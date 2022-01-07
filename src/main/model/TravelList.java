@@ -35,8 +35,8 @@ public class TravelList implements Writable {
 
     // MODIFIES: this
     // EFFECTS: remove a placeOfInterest from the list
-    public void removePlace(PlaceOfInterest place) {
-        places.remove(place);
+    public boolean removePlace(PlaceOfInterest place) {
+        return places.remove(place);
     }
 
     // EFFECTS: returns places in travelList as an unmodifiable list

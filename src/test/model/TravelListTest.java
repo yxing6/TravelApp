@@ -19,10 +19,10 @@ public class TravelListTest {
     void runBefore() {
         visited = State.VISITED;
         notVisited = State.NotVISITED;
-        placeA = new PlaceOfInterest(null, null);
-        placeB = new PlaceOfInterest(null, null);
-        placeC = new PlaceOfInterest(null, null);
-        placeD = new PlaceOfInterest(null, null);
+        placeA = new PlaceOfInterest("A", null);
+        placeB = new PlaceOfInterest("B", null);
+        placeC = new PlaceOfInterest("C", null);
+        placeD = new PlaceOfInterest("D", null);
         travelList = new TravelList();
     }
 
@@ -36,6 +36,17 @@ public class TravelListTest {
     @Test
     void testAddOnePlace() {
         travelList.addPlace(placeA);
+        assertEquals(1, travelList.getPlaces().size());
+        assertEquals(1, travelList.getBucketList().size());
+        assertEquals(0, travelList.getVisitedList().size());
+    }
+
+    @Test
+    void testAddDupPlace() {
+        travelList.addPlace(placeA);
+        PlaceOfInterest samePlace = new PlaceOfInterest("A", null);
+        travelList.addPlace(samePlace);
+        System.out.println(travelList.getBucketList());
         assertEquals(1, travelList.getPlaces().size());
         assertEquals(1, travelList.getBucketList().size());
         assertEquals(0, travelList.getVisitedList().size());

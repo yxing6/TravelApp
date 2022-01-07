@@ -3,8 +3,6 @@ package model;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import persistence.Writable;
-
-import java.nio.file.Watchable;
 import java.util.*;
 
 // a list of places to hold all placeOfInterest

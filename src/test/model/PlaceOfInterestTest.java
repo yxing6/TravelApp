@@ -32,6 +32,7 @@ class PlaceOfInterestTest {
         assertEquals(LON, placeOfInterest.getLocation().getLongitude());
         assertEquals(State.NotVISITED, placeOfInterest.getVisitingStatus());
         assertEquals(NotVISITED, placeOfInterest.getVisitingStatus().getDisplayString());
+        assertNotEquals(VISITED, placeOfInterest.getVisitingStatus().getDisplayString());
     }
 
     @Test

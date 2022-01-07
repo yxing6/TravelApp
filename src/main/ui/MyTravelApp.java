@@ -8,6 +8,7 @@ import persistence.JsonReader;
 import persistence.JsonWriter;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Scanner;
 import java.util.Set;
 
@@ -122,6 +123,7 @@ public class MyTravelApp {
         if (travelList.getVisitedList().size() == 0) {
             System.out.println("\n\tYour visited list is empty. You have not been to any place... not yet!");
         } else {
+            System.out.println("\n\tThe countries on your visited list are:");
             Set<PlaceOfInterest> visitedPlaces = travelList.getVisitedList();
             viewOneList(visitedPlaces);
         }
@@ -129,6 +131,7 @@ public class MyTravelApp {
         if (travelList.getBucketList().size() == 0) {
             System.out.println("\n\tYour bucket list is empty. Explore where you want to go!");
         } else {
+            System.out.println("\n\tThe countries on your bucket list are:");
             Set<PlaceOfInterest> bucketPlaces = travelList.getBucketList();
             viewOneList(bucketPlaces);
         }
@@ -137,9 +140,8 @@ public class MyTravelApp {
 
     // EFFECTS: a helper method to print each placeOfInterest in a list
     private void viewOneList(Set<PlaceOfInterest> places) {
-        System.out.println("\n\tThe countries on your visited list are:");
         for (PlaceOfInterest p: places) {
-            System.out.println(p.toString());
+            System.out.println("\t" + p.toString());
         }
     }
 
@@ -147,29 +149,57 @@ public class MyTravelApp {
     // EFFECTS: prompt user for name of the list to modify
     private void modifyTravelList() {
 
-        PlaceOfInterest place;
         String commandB;
 
-        System.out.println("\n\t\tSelect from:");
-        System.out.println("\t\t\ta -> I want to add one place to my travel list.");
-        System.out.println("\t\t\td -> I want to delete one place from my travel list.");
-        System.out.print("\t\t\t");
+        System.out.println("\n\tSelect from:");
+        System.out.println("\t\ta -> I want to add one place to my travel list.");
+        System.out.println("\t\td -> I want to delete one place from my travel list.");
+        System.out.print("\t\t");
         commandB = input.next();
         commandB = commandB.toLowerCase();
 
         if (commandB.equals("a")) {
-            place = parsePOI();
-            travelList.addPlace(place);
+            addingOnePlace();
         } else if (commandB.equals("d")) {
-            place = parsePOI();
-            travelList.removePlace(place);
+            removeOnePlace();
         } else {
-            System.out.println("\t\t\tSelection not valid... Return to the main menu");
+            System.out.println("\t\tSelection not valid... Return to the main menu");
         }
     }
 
 
-    // EFFECTS:  to construct a new placeOfInterest based on user input
+    // EFFECTS: to add one PlaceOfInterest on to the travelList
+    private void addingOnePlace() {
+
+        PlaceOfInterest place = parsePOI();
+
+        boolean succeed = travelList.addPlace(place);
+        if (succeed) {
+            System.out.println("\t\t\tPlace successfully added!");
+        } else {
+            System.out.println("\t\t\tSame place might already been in your list");
+        }
+    }
+
+
+    // EFFECTS: to remove one PlaceOfInterest on to the travelList
+    private void removeOnePlace() {
+
+        if (travelList.getPlaces().size() == 0) {
+            System.out.println("\t\tThere is no place on your list to remove... Return to the main menu");
+        } else {
+            PlaceOfInterest place = parsePOI();
+            boolean succeed = travelList.removePlace(place);
+            if (succeed) {
+                System.out.println("\t\t\tPlace successfully removed!");
+            } else {
+                System.out.println("\t\t\tThere is no such place on your list to remove");
+            }
+        }
+    }
+
+
+    // EFFECTS: to construct a new placeOfInterest based on user input
     private PlaceOfInterest parsePOI() {
         String name;
         GeoPoint location;
@@ -189,7 +219,7 @@ public class MyTravelApp {
     }
 
 
-    // EFFECTS:  to construct a new geoPoint based on user input
+    // EFFECTS: to construct a new geoPoint based on user input
     private GeoPoint parseGeoPoint() {
 
         GeoPoint location;
@@ -211,21 +241,57 @@ public class MyTravelApp {
     // EFFECTS: to parse place visiting status based on user input
     private State parseState() {
 
-        State status = null;
-        String statusString;
+//        State status = null;
+//        String statusString;
+//
+//        System.out.println("\t\t\tHave you been to this place? Enter y for Yes, n for No: ");
+//        System.out.print("\t\t\t");
+//        statusString = input.next();
+//        statusString = statusString.toLowerCase();
+//        if (statusString.equals("y")) {
+//            status = State.VISITED;
+//        } else if (statusString.equals("n")) {
+//            status = State.NotVISITED;
+//        } else {
+//            System.out.println("\t\t\tSelection not valid... Return to the main menu");
+//        }
+//        return status;
 
-        System.out.println("\t\t\tHave you been to this place? Enter y for Yes, n for No: ");
-        System.out.print("\t\t\t");
-        statusString = input.next();
-        statusString = statusString.toLowerCase();
-        if (statusString.equals("y")) {
-            status = State.VISITED;
-        } else if (statusString.equals("n")) {
-            status = State.NotVISITED;
-        } else {
-            System.out.println("\t\t\tSelection not valid... Return to the main menu");
+        System.out.println("\t\t\tPlease select a state for this place of interest");
+
+        int label = 1;
+        for (State s: State.values()) {
+            System.out.println("\t\t\t" + label + " -> " + s);
+            label++;
         }
-        return status;
+        System.out.print("\t\t\t");
+        int selection = input.nextInt();
+        return State.values()[selection - 1];
+    }
+
+
+    // EFFECTS: saves the travel list to file and catch FileNotFoundException
+    private void saveTravelList() {
+        try {
+            jsonWriter.open();
+            jsonWriter.write(travelList);
+            jsonWriter.close();
+            System.out.println("Saved the travel list to " + JSON_STORE);
+        } catch (FileNotFoundException e) {
+            System.out.println("Unable to write to file: " + JSON_STORE);
+        }
+    }
+
+
+    // MODIFIES: this
+    // EFFECTS: loads travel list from file and catch FileNotFoundException
+    private void loadTravelList() {
+        try {
+            travelList = jsonReader.read();
+            System.out.println("Loaded the travel list from " + JSON_STORE);
+        } catch (IOException e) {
+            System.out.println("Unable to read from file: " + JSON_STORE);
+        }
     }
 
 }

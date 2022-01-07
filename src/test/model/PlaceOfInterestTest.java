@@ -1,5 +1,6 @@
 package model;
 
+import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -63,6 +64,25 @@ class PlaceOfInterestTest {
         PlaceOfInterest place3 = new PlaceOfInterest(null, null);
         assertNotEquals(place.hashCode(), place3.hashCode());
         assertNotEquals(place, place3);
+    }
+
+    @Test
+    void testToString() {
+        place.setVisitingStatus(visited);
+        String str = place.toString();
+        String expected = "{ " + "name: " + NAME
+                + ", location: latitude = " + LAT + " & longitude = " + LON
+                + ", visiting status: " + visited + "}";
+        assertEquals(expected, str);
+    }
+
+    @Test
+    void testToJson() {
+        place.setVisitingStatus(visited);
+        JSONObject json = place.toJson();
+        assertEquals(NAME, json.get("name"));
+        assertEquals(point.toString(), json.get("location"));
+        assertEquals(visited, json.get("status"));
     }
 
 

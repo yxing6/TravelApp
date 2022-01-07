@@ -5,7 +5,17 @@ import org.json.JSONObject;
 import persistence.Writable;
 import java.util.*;
 
-// a list of places to hold all placeOfInterest
+
+/* CPSC 210 Term Project Version 2:
+ * Travel Record - TravelList
+ * Author: Yun Xing
+ * Date: January 06, 2022
+ *
+ * a list of places to hold all placeOfInterest
+ * User should be able to add and remove any instance of placeOfInterest from the list
+ * TravelList is writable class can be written to external files.
+ */
+
 public class TravelList implements Writable {
 
     private List<PlaceOfInterest> places;

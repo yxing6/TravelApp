@@ -2,7 +2,6 @@ package model;
 
 import org.json.JSONObject;
 import persistence.Writable;
-
 import java.util.Objects;
 
 /* CPSC 210 Term Project Version 2:
@@ -58,7 +57,7 @@ public class PlaceOfInterest implements Writable {
     }
 
 
-    // two place are equal if their name and geoPoint are equal
+    // two places are equal if both their name and geoPoint are equal
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -87,8 +86,8 @@ public class PlaceOfInterest implements Writable {
 
     @Override
     public String toString() {
-        return "PlaceOfInterest{" + "name='" + name + '\''
-                + ", location=" + location + ", visitingStatus=" + visitingStatus + '}';
+        return "PlaceOfInterest {" + "name=' " + name + '\''
+                + ", location= " + location + ", visitingStatus= " + visitingStatus + '}';
     }
 
 

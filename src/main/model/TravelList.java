@@ -1,9 +1,14 @@
 package model;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+import persistence.Writable;
+
+import java.nio.file.Watchable;
 import java.util.*;
 
 // a list of places to hold all placeOfInterest
-public class TravelList {
+public class TravelList implements Writable {
 
     private List<PlaceOfInterest> places;
 
@@ -51,5 +56,22 @@ public class TravelList {
             }
         }
         return placeSet;
+    }
+
+    @Override
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("places", placesToJson());
+        return json;
+    }
+
+    // EFFECTS: returns places in this travelList as a JSON Array
+    private JSONArray placesToJson() {
+
+        JSONArray jsonArray = new JSONArray();
+        for (PlaceOfInterest p: places) {
+            jsonArray.put(p.toJson());
+        }
+        return jsonArray;
     }
 }

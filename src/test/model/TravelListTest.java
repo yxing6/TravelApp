@@ -1,5 +1,7 @@
 package model;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -19,7 +21,7 @@ public class TravelListTest {
     void runBefore() {
         visited = State.VISITED;
         notVisited = State.NotVISITED;
-        placeA = new PlaceOfInterest("A", null);
+        placeA = new PlaceOfInterest("A", new GeoPoint(1, 2));
         placeB = new PlaceOfInterest("B", null);
         placeC = new PlaceOfInterest("C", null);
         placeD = new PlaceOfInterest("D", null);
@@ -44,9 +46,8 @@ public class TravelListTest {
     @Test
     void testAddDupPlace() {
         travelList.addPlace(placeA);
-        PlaceOfInterest samePlace = new PlaceOfInterest("A", null);
+        PlaceOfInterest samePlace = new PlaceOfInterest("A", new GeoPoint(1, 2));
         travelList.addPlace(samePlace);
-        System.out.println(travelList.getBucketList());
         assertEquals(1, travelList.getPlaces().size());
         assertEquals(1, travelList.getBucketList().size());
         assertEquals(0, travelList.getVisitedList().size());
@@ -55,12 +56,17 @@ public class TravelListTest {
     @Test
     void testRemoveOnePlaceInList() {
         travelList.addPlace(placeA);
+        travelList.addPlace(placeB);
+        assertEquals(2, travelList.getPlaces().size());
+        assertEquals(2, travelList.getBucketList().size());
+        assertEquals(0, travelList.getVisitedList().size());
+        travelList.removePlace(placeA);
         assertEquals(1, travelList.getPlaces().size());
         assertEquals(1, travelList.getBucketList().size());
         assertEquals(0, travelList.getVisitedList().size());
         travelList.removePlace(placeA);
-        assertEquals(0, travelList.getPlaces().size());
-        assertEquals(0, travelList.getBucketList().size());
+        assertEquals(1, travelList.getPlaces().size());
+        assertEquals(1, travelList.getBucketList().size());
         assertEquals(0, travelList.getVisitedList().size());
     }
 
@@ -119,5 +125,17 @@ public class TravelListTest {
         placeA.setVisitingStatus(notVisited);
         assertEquals(1, travelList.getBucketList().size());
         assertEquals(3, travelList.getVisitedList().size());
+    }
+
+
+    @Test
+    void testToJson() {
+        travelList.addPlace(placeA);
+        JSONObject json = travelList.toJson();
+        JSONArray jArray = json.getJSONArray("places");
+        JSONObject jsonPlace = jArray.getJSONObject(0);
+        assertEquals(placeA.getName(), jsonPlace.getString("name"));
+        assertEquals(placeA.getVisitingStatus(), jsonPlace.get("status"));
+        assertEquals(placeA.getLocation().toString(), jsonPlace.get("location"));
     }
 }

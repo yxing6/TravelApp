@@ -33,7 +33,6 @@ public class TravelListTest {
         assertTrue(travelList.getBucketList().isEmpty());
     }
 
-
     @Test
     void testAddOnePlace() {
         travelList.addPlace(placeA);
@@ -42,6 +41,29 @@ public class TravelListTest {
         assertEquals(0, travelList.getVisitedList().size());
     }
 
+    @Test
+    void testRemoveOnePlaceInList() {
+        travelList.addPlace(placeA);
+        assertEquals(1, travelList.getPlaces().size());
+        assertEquals(1, travelList.getBucketList().size());
+        assertEquals(0, travelList.getVisitedList().size());
+        travelList.removePlace(placeA);
+        assertEquals(0, travelList.getPlaces().size());
+        assertEquals(0, travelList.getBucketList().size());
+        assertEquals(0, travelList.getVisitedList().size());
+    }
+
+    @Test
+    void testRemoveOnePlaceNotInList() {
+        travelList.addPlace(placeA);
+        assertEquals(1, travelList.getPlaces().size());
+        assertEquals(1, travelList.getBucketList().size());
+        assertEquals(0, travelList.getVisitedList().size());
+        travelList.removePlace(placeB);
+        assertEquals(1, travelList.getPlaces().size());
+        assertEquals(1, travelList.getBucketList().size());
+        assertEquals(0, travelList.getVisitedList().size());
+    }
 
     @Test
     void testAddManyPlace() {
@@ -51,6 +73,19 @@ public class TravelListTest {
         travelList.addPlace(placeD);
         assertEquals(4, travelList.getPlaces().size());
         assertEquals(4, travelList.getBucketList().size());
+        assertEquals(0, travelList.getVisitedList().size());
+    }
+
+    @Test
+    void testRemoveManyPlace() {
+        travelList.addPlace(placeA);
+        travelList.addPlace(placeB);
+        travelList.addPlace(placeC);
+        travelList.addPlace(placeD);
+        travelList.removePlace(placeA);
+        travelList.removePlace(placeB);
+        assertEquals(2, travelList.getPlaces().size());
+        assertEquals(2, travelList.getBucketList().size());
         assertEquals(0, travelList.getVisitedList().size());
     }
 

@@ -20,6 +20,12 @@ public class TravelList {
         }
     }
 
+    // MODIFIES: this
+    // EFFECTS: remove a placeOfInterest from the list
+    public void removePlace(PlaceOfInterest place) {
+        places.remove(place);
+    }
+
     // EFFECTS: returns places in travelList as an unmodifiable list
     public List<PlaceOfInterest> getPlaces() {
         return Collections.unmodifiableList(places);

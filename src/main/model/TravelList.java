@@ -27,9 +27,11 @@ public class TravelList implements Writable {
 
     // MODIFIES: this
     // EFFECTS: add a placeOfInterest to the list, maintains resources in the order added to registry
-    public void addPlace(PlaceOfInterest place) {
+    public boolean addPlace(PlaceOfInterest place) {
         if (!places.contains(place)) {
-            places.add(place);
+            return places.add(place);
+        } else {
+            return false;
         }
     }
 

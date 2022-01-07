@@ -71,8 +71,8 @@ class PlaceOfInterestTest {
         place.setVisitingStatus(visited);
         String str = place.toString();
         String expected = "{ " + "name: " + NAME
-                + ", location: latitude = " + LAT + " & longitude = " + LON
-                + ", visiting status: " + visited + "}";
+                + "; location: latitude = " + LAT + " & longitude = " + LON
+                + "; visiting status: " + visited + " }";
         assertEquals(expected, str);
     }
 

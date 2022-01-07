@@ -15,20 +15,35 @@ public class TravelList {
     // MODIFIES: this
     // EFFECTS: add a placeOfInterest to the list, maintains resources in the order added to registry
     public void addPlace(PlaceOfInterest place) {
+        if (!places.contains(place)) {
+            places.add(place);
+        }
     }
 
     // EFFECTS: returns places in travelList as an unmodifiable list
     public List<PlaceOfInterest> getPlaces() {
-        return null;
+        return Collections.unmodifiableList(places);
     }
 
     // EFFECTS: returns set of places that has visitingStatus of NotVISITED
     public Set<PlaceOfInterest> getBucketList() {
-        return null;
+        Set<PlaceOfInterest> placeSet = new HashSet<>();
+        for (PlaceOfInterest p: places) {
+            if (!p.beenTo()) {
+                placeSet.add(p);
+            }
+        }
+        return placeSet;
     }
 
     // EFFECTS: returns set of places that has visitingStatus of VISITED
     public Set<PlaceOfInterest> getVisitedList() {
-        return null;
+        Set<PlaceOfInterest> placeSet = new HashSet<>();
+        for (PlaceOfInterest p: places) {
+            if (p.beenTo()) {
+                placeSet.add(p);
+            }
+        }
+        return placeSet;
     }
 }

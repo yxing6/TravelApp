@@ -4,13 +4,13 @@ public enum State {
     VISITED("Visited"),
     NotVISITED("OnBucketList");
 
-    private String visitingStatus;
+    private String displayString;
 
-    State(String visitingStatus) {
-        this.visitingStatus = visitingStatus;
+    State(String displayString) {
+        this.displayString = displayString;
     }
 
-    public String getVisitingStatus() {
-        return visitingStatus;
+    public String getDisplayString() {
+        return displayString;
     }
 }

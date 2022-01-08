@@ -1,9 +1,6 @@
 package ui.gui;
 
-import model.GeoPoint;
-import model.PlaceOfInterest;
-import model.SelectionState;
-import model.TravelList;
+import model.*;
 import org.jxmapviewer.JXMapViewer;
 import org.jxmapviewer.OSMTileFactoryInfo;
 import org.jxmapviewer.viewer.*;
@@ -16,11 +13,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
-public class TravelApp extends JFrame {
+public class TravelApp extends JFrame implements ISelectionListener {
 
     private static final int MAP_WIDTH = 1000;
     private static final int MAP_HEIGHT = 700;
@@ -44,8 +41,7 @@ public class TravelApp extends JFrame {
 
         buildMapViewer();
         add(BorderLayout.CENTER, mapViewer);
-
-
+        add(BorderLayout.EAST, new ControlPanel(selectionState, this));
         setResizable(false);
         pack();
         setLocationRelativeTo(null);
@@ -107,7 +103,7 @@ public class TravelApp extends JFrame {
             travelListIn = jsonReader.read();
             travelListOut = travelListIn;
             selectionState = new SelectionState(travelListIn);
-            displayTravelList();
+            displayPlaces(travelListIn.getPlaces());
         } catch (IOException e) {
             System.out.println("Unable to read from file: " + JSON_STORE);
             e.printStackTrace();
@@ -149,10 +145,20 @@ public class TravelApp extends JFrame {
         mapViewer.setAddressLocation(center);
     }
 
+
+
+    @Override
+    public void update(State state) {
+        if (state == State.VISITED) {
+            displayPlaces(travelListIn.getVisitedList());
+        } else {
+            displayPlaces(travelListIn.getBucketList());
+        }
+    }
+
     // MODIFIES: this
-    // EFFECTS: add markers to map corresponding to the GeoPoint
-    private void displayTravelList() {
-        Set<PlaceOfInterest> places = selectionState.getPlacesWithVisitingStatus();
+    // EFFECTS: add markers to map corresponding to the GeoPoint for all places in the parameter
+    private void displayPlaces(List<PlaceOfInterest> places) {
         Set<Waypoint> markers = new HashSet<>();
 
         for (PlaceOfInterest p : places) {

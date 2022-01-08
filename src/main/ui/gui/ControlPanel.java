@@ -12,7 +12,6 @@ public class ControlPanel extends JPanel {
 
     private static final int GAP = 10;  // vertical spacing between components in pixels
     private ISelectionListener selectionListener;
-    // private List<JRadioButton> JRadioButtons;
 
     // EFFECTS: constructs panel for displaying user controls
     public ControlPanel(ISelectionListener selectionListener) {
@@ -35,13 +34,16 @@ public class ControlPanel extends JPanel {
 
         JRadioButton visited = createVisitedButton();
         JRadioButton bucket = createBucketButton();
+        JRadioButton all = createAllButton();
 
         radioButtonHolder.add(visited);
         radioButtonHolder.add(bucket);
+        radioButtonHolder.add(all);
 
         ButtonGroup radioBtnGroup = new ButtonGroup();
         radioBtnGroup.add(visited);
         radioBtnGroup.add(bucket);
+        radioBtnGroup.add(all);
 
     }
 
@@ -71,5 +73,17 @@ public class ControlPanel extends JPanel {
         });
 
         return bucket;
+    }
+
+    private JRadioButton createAllButton() {
+        JRadioButton all = new JRadioButton("All places", false);
+
+        all.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                selectionListener.update();
+            }
+        });
+        return all;
     }
 }

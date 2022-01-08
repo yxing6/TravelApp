@@ -151,6 +151,10 @@ public class TravelApp extends JFrame implements ISelectionListener {
         }
     }
 
+    @Override
+    public void update() {
+        displayPlaces(travelListIn.getPlaces());
+    }
 
     // MODIFIES: this
     // EFFECTS: add markers to map corresponding to the GeoPoint for all places in the parameter

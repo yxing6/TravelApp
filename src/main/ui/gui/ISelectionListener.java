@@ -14,4 +14,6 @@ public interface ISelectionListener {
     // called when visiting status selection has been changed
     void update(State state);
 
+    void update();
+
 }

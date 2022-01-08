@@ -22,7 +22,7 @@ public class ControlPanel extends JPanel {
         Box toolHolder = Box.createVerticalBox();
         addRadioButtons(toolHolder);
         toolHolder.add(Box.createVerticalStrut(GAP));
-        add(toolHolder);
+        this.add(toolHolder);
     }
 
 

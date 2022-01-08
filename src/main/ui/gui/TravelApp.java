@@ -100,7 +100,7 @@ public class TravelApp extends JFrame implements ISelectionListener {
             JsonReader jsonReader = new JsonReader(JSON_STORE);
             travelListIn = jsonReader.read();
             travelListOut = travelListIn;
-            displayPlaces(travelListIn.getPlaces());
+            displayPlaces(travelListIn.getPlaces(), true);
         } catch (IOException e) {
             System.out.println("Unable to read from file: " + JSON_STORE);
             e.printStackTrace();
@@ -145,17 +145,22 @@ public class TravelApp extends JFrame implements ISelectionListener {
 
 
     @Override
-    public void update(State state) {
+    public void update(State state, boolean display) {
         if (state == State.VISITED) {
-            displayPlaces(travelListIn.getVisitedList());
+            displayPlaces(travelListIn.getVisitedList(), display);
         } else {
-            displayPlaces(travelListIn.getBucketList());
+            displayPlaces(travelListIn.getBucketList(), display);
         }
     }
 
+//    @Override
+//    public void update(State state, boolean boo) {
+//        if (state ==)
+//    }
+
     // MODIFIES: this
     // EFFECTS: add markers to map corresponding to the GeoPoint for all places in the parameter
-    private void displayPlaces(List<PlaceOfInterest> places) {
+    private void displayPlaces(List<PlaceOfInterest> places, boolean display) {
         Set<Waypoint> markers = new HashSet<>();
 
         for (PlaceOfInterest p : places) {
@@ -166,7 +171,10 @@ public class TravelApp extends JFrame implements ISelectionListener {
 
         WaypointPainter<Waypoint> waypointPainter = new WaypointPainter<>();
         waypointPainter.setWaypoints(markers);
-        mapViewer.setOverlayPainter(waypointPainter);
+        if (display) {
+            mapViewer.setOverlayPainter(waypointPainter);
+        }
+
     }
 
 

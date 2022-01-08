@@ -1,6 +1,7 @@
 package model;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 // Represents the state of user selection
@@ -33,7 +34,7 @@ public class SelectionState {
     // EFFECTS: return a set of places corresponding to the current user selection;
     //          if visitList is selected, return places with status VISITED;
     //          if bucketList is selected, return places with status NotVISITED;
-    public  Set<PlaceOfInterest> getPlacesWithVisitingStatus() {
+    public List<PlaceOfInterest> getPlacesWithVisitingStatus() {
 
         return visitedStatus == State.VISITED ? travelList.getVisitedList() : travelList.getBucketList();
 

@@ -5,6 +5,8 @@ import model.State;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,10 +49,16 @@ public class ControlPanel extends JPanel {
     // EFFECTS: returns radio button for "visited list" option
     private JCheckBox createVisitedBox() {
         JCheckBox visited = new JCheckBox("visited list", false);
-        visited.addActionListener(new ActionListener() {
+//        visited.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                selectionListener.update(State.VISITED);
+//            }
+//        });
+        visited.addItemListener(new ItemListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {
-                selectionListener.update(State.VISITED);
+            public void itemStateChanged(ItemEvent e) {
+                selectionListener.update(State.VISITED, e.getStateChange() == ItemEvent.SELECTED);
             }
         });
 
@@ -61,12 +69,18 @@ public class ControlPanel extends JPanel {
     // EFFECTS: returns radio button for "bucket list" option
     private JCheckBox createBucketBox() {
         JCheckBox bucket = new JCheckBox("bucket list", false);
-        bucket.addActionListener(new ActionListener() {
+        bucket.addItemListener(new ItemListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {
-                selectionListener.update(State.NotVISITED);
+            public void itemStateChanged(ItemEvent e) {
+                selectionListener.update(State.NotVISITED, e.getStateChange() == ItemEvent.SELECTED);
             }
         });
+//        bucket.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                selectionListener.update(State.NotVISITED, e.g);
+//            }
+//        });
 
         return bucket;
     }

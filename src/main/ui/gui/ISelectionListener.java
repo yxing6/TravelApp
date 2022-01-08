@@ -2,6 +2,8 @@ package ui.gui;
 
 import model.State;
 
+import java.awt.*;
+
 /* CPSC 210 Term Project Version 2:
  * Travel Record - GUI - ISelectionListener
  * Author:  Yun Xing
@@ -12,6 +14,7 @@ import model.State;
 public interface ISelectionListener {
 
     // called when visiting status selection has been changed
-    void update(State state);
+    void update(State state, boolean display);
 
+//    void update(State state, boolean boo);
 }

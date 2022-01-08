@@ -47,25 +47,25 @@ public class TravelList implements Writable {
     }
 
     // EFFECTS: returns set of places that has visitingStatus of NotVISITED
-    public Set<PlaceOfInterest> getBucketList() {
-        Set<PlaceOfInterest> placeSet = new HashSet<>();
+    public List<PlaceOfInterest> getBucketList() {
+        List<PlaceOfInterest> placeList = new LinkedList<>();
         for (PlaceOfInterest p: places) {
             if (!p.beenTo()) {
-                placeSet.add(p);
+                placeList.add(p);
             }
         }
-        return placeSet;
+        return placeList;
     }
 
     // EFFECTS: returns set of places that has visitingStatus of VISITED
-    public Set<PlaceOfInterest> getVisitedList() {
-        Set<PlaceOfInterest> placeSet = new HashSet<>();
+    public List<PlaceOfInterest> getVisitedList() {
+        List<PlaceOfInterest> placeList = new LinkedList<>();
         for (PlaceOfInterest p: places) {
             if (p.beenTo()) {
-                placeSet.add(p);
+                placeList.add(p);
             }
         }
-        return placeSet;
+        return placeList;
     }
 
     @Override

@@ -7,6 +7,7 @@ import model.TravelList;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -74,7 +75,7 @@ class JsonWriterTest {
             assertEquals(1, travelListIn.getBucketList().size());
             assertEquals(0, travelListIn.getVisitedList().size());
 
-            Set<PlaceOfInterest> bucketList = travelListIn.getBucketList();
+            List<PlaceOfInterest> bucketList = travelListIn.getBucketList();
             for (PlaceOfInterest p: bucketList) {
                 assertEquals(nameA, p.getName());
                 assertEquals(latA, p.getLocation().getLatitude());

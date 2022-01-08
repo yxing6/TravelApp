@@ -10,7 +10,7 @@ package model;
  */
 public enum State {
     VISITED("Visited"),
-    NotVISITED("OnBucketList");
+    NotVISITED("NotVisited");
 
     private String displayString;
 

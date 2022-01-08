@@ -9,6 +9,7 @@ import persistence.JsonWriter;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
 
@@ -124,7 +125,7 @@ public class MyTravelApp {
             System.out.println("\n\tYour visited list is empty. You have not been to any place... not yet!");
         } else {
             System.out.println("\n\tThe places on your visited list are:");
-            Set<PlaceOfInterest> visitedPlaces = travelList.getVisitedList();
+            List<PlaceOfInterest> visitedPlaces = travelList.getVisitedList();
             viewOneList(visitedPlaces);
         }
 
@@ -132,14 +133,14 @@ public class MyTravelApp {
             System.out.println("\n\tYour bucket list is empty. Explore where you want to go!");
         } else {
             System.out.println("\n\tThe places on your bucket list are:");
-            Set<PlaceOfInterest> bucketPlaces = travelList.getBucketList();
+            List<PlaceOfInterest> bucketPlaces = travelList.getBucketList();
             viewOneList(bucketPlaces);
         }
     }
 
 
     // EFFECTS: a helper method to print each placeOfInterest in a list
-    private void viewOneList(Set<PlaceOfInterest> places) {
+    private void viewOneList(List<PlaceOfInterest> places) {
         int i = 1;
         for (PlaceOfInterest p: places) {
             System.out.println("\t" + i + ": " + p.toString());

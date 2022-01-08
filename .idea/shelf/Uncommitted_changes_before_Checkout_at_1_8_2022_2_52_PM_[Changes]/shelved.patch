@@ -1,0 +1,205 @@
+Index: src/main/ui/gui/TravelApp.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package ui.gui;\r\n\r\nimport model.*;\r\nimport org.jxmapviewer.JXMapViewer;\r\nimport org.jxmapviewer.OSMTileFactoryInfo;\r\nimport org.jxmapviewer.viewer.*;\r\nimport persistence.JsonReader;\r\nimport persistence.JsonWriter;\r\n\r\nimport javax.swing.*;\r\nimport java.awt.*;\r\nimport java.awt.event.ActionEvent;\r\nimport java.awt.event.ActionListener;\r\nimport java.io.FileNotFoundException;\r\nimport java.io.IOException;\r\nimport java.util.HashSet;\r\nimport java.util.List;\r\nimport java.util.Set;\r\n\r\npublic class TravelApp extends JFrame implements ISelectionListener {\r\n\r\n    private static final int MAP_WIDTH = 1000;\r\n    private static final int MAP_HEIGHT = 700;\r\n    private static final String JSON_STORE = \"./data/travels.json\";\r\n\r\n    private DefaultListModel listModel;\r\n    private JList jlist;\r\n    private TravelList travelListIn;\r\n    private TravelList travelListOut;\r\n    private JXMapViewer mapViewer;\r\n\r\n\r\n    public TravelApp() {\r\n        super(\"Travel Tracker\");\r\n        initContentFields();\r\n        createMenu();\r\n        setSize(WIDTH, HEIGHT);\r\n        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);\r\n        setLayout(new BorderLayout());\r\n\r\n        buildMapViewer();\r\n        add(BorderLayout.CENTER, mapViewer);\r\n        add(BorderLayout.EAST, new ControlPanel(this));\r\n        setResizable(false);\r\n        pack();\r\n        setLocationRelativeTo(null);\r\n        setVisible(true);\r\n    }\r\n\r\n\r\n    // MODIFIES: this\r\n    // EFFECTS: initiate fields\r\n    public void initContentFields() {\r\n\r\n        listModel = new DefaultListModel();\r\n        jlist = new JList(listModel);\r\n        travelListIn = new TravelList();\r\n        travelListOut = new TravelList();\r\n    }\r\n\r\n\r\n    // MODIFIES: this\r\n    // EFFECTS: initiate and set up a menu bar containing menuItems\r\n    //          Each menuItem is associated with an ActionListener for file load and save\r\n    public void createMenu() {\r\n\r\n        JMenuBar menuBar = new JMenuBar();\r\n        JMenu topMenu = new JMenu(\"FILE\");\r\n        menuBar.add(topMenu);\r\n\r\n        JMenuItem load = new JMenuItem(\"LOAD\");\r\n        JMenuItem save = new JMenuItem(\"SAVE\");\r\n        topMenu.add(load);\r\n        topMenu.add(save);\r\n\r\n        this.setJMenuBar(menuBar);\r\n\r\n        load.addActionListener(new ActionListener() {\r\n            @Override\r\n            public void actionPerformed(ActionEvent e) {\r\n                loadTravelList();\r\n            }\r\n        });\r\n\r\n        save.addActionListener(new ActionListener() {\r\n            @Override\r\n            public void actionPerformed(ActionEvent e) {\r\n                writeTravelList();\r\n            }\r\n        });\r\n\r\n    }\r\n\r\n\r\n    // MODIFIES: this\r\n    // EFFECTS: Load in travelList.json and handle file IO Exception\r\n    private void loadTravelList() {\r\n\r\n        try {\r\n            JsonReader jsonReader = new JsonReader(JSON_STORE);\r\n            travelListIn = jsonReader.read();\r\n            travelListOut = travelListIn;\r\n            displayPlaces(travelListIn.getPlaces(), true);\r\n        } catch (IOException e) {\r\n            System.out.println(\"Unable to read from file: \" + JSON_STORE);\r\n            e.printStackTrace();\r\n            JOptionPane.showMessageDialog(this,\r\n                    e.getMessage() + \"\\nCaused by: \" + e.getCause().getMessage(),\r\n                    \"Reader error\", JOptionPane.ERROR_MESSAGE);\r\n        }\r\n    }\r\n\r\n\r\n    // MODIFIES: this\r\n    // EFFECTS: write all panel content to the travelList.json file\r\n    private void writeTravelList() {\r\n\r\n        JsonWriter jsonWriter = new JsonWriter(JSON_STORE);\r\n        try {\r\n            jsonWriter.open();\r\n            jsonWriter.write(travelListOut);\r\n            jsonWriter.close();\r\n        } catch (FileNotFoundException e) {\r\n            System.out.println(\"Unable to write to file: \" + JSON_STORE);\r\n        }\r\n    }\r\n\r\n\r\n    // MODIFIES: this\r\n    // EFFECTS: build map viewer centred on the world map center\r\n    private void buildMapViewer() {\r\n        mapViewer = new JXMapViewer();\r\n        mapViewer.setPreferredSize(new Dimension(MAP_WIDTH, MAP_HEIGHT));\r\n\r\n        TileFactoryInfo info = new OSMTileFactoryInfo();\r\n        DefaultTileFactory tileFactory = new DefaultTileFactory(info);\r\n        tileFactory.setThreadPoolSize(8);\r\n        mapViewer.setTileFactory(tileFactory);\r\n\r\n        GeoPosition center = new GeoPosition(0.0, 0.0);\r\n        mapViewer.setZoom(17);\r\n        mapViewer.setAddressLocation(center);\r\n    }\r\n\r\n\r\n\r\n    @Override\r\n    public void update(State state, boolean display) {\r\n        if (state == State.VISITED) {\r\n            displayPlaces(travelListIn.getVisitedList(), display);\r\n        } else {\r\n            displayPlaces(travelListIn.getBucketList(), display);\r\n        }\r\n    }\r\n\r\n//    @Override\r\n//    public void update(State state, boolean boo) {\r\n//        if (state ==)\r\n//    }\r\n\r\n    // MODIFIES: this\r\n    // EFFECTS: add markers to map corresponding to the GeoPoint for all places in the parameter\r\n    private void displayPlaces(List<PlaceOfInterest> places, boolean display) {\r\n        Set<Waypoint> markers = new HashSet<>();\r\n\r\n        for (PlaceOfInterest p : places) {\r\n            GeoPoint geoPoint = p.getLocation();\r\n            GeoPosition geoPosition = new GeoPosition(geoPoint.getLatitude(), geoPoint.getLongitude());\r\n            markers.add(new DefaultWaypoint(geoPosition));\r\n        }\r\n\r\n        WaypointPainter<Waypoint> waypointPainter = new WaypointPainter<>();\r\n        waypointPainter.setWaypoints(markers);\r\n        if (display) {\r\n            mapViewer.setOverlayPainter(waypointPainter);\r\n        }\r\n\r\n    }\r\n\r\n\r\n    public static void main(String[] args) {\r\n        new TravelApp();\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/ui/gui/TravelApp.java b/src/main/ui/gui/TravelApp.java
+--- a/src/main/ui/gui/TravelApp.java	(revision 7dc6c16868e7dedcc289791504ce959736b3ea06)
++++ b/src/main/ui/gui/TravelApp.java	(date 1641681687460)
+@@ -100,7 +100,7 @@
+             JsonReader jsonReader = new JsonReader(JSON_STORE);
+             travelListIn = jsonReader.read();
+             travelListOut = travelListIn;
+-            displayPlaces(travelListIn.getPlaces(), true);
++            displayPlaces(travelListIn.getPlaces());
+         } catch (IOException e) {
+             System.out.println("Unable to read from file: " + JSON_STORE);
+             e.printStackTrace();
+@@ -142,25 +142,28 @@
+         mapViewer.setAddressLocation(center);
+     }
+ 
+-
+-
+     @Override
+-    public void update(State state, boolean display) {
++    public void update(State state) {
+         if (state == State.VISITED) {
+-            displayPlaces(travelListIn.getVisitedList(), display);
++            displayPlaces(travelListIn.getVisitedList());
+         } else {
+-            displayPlaces(travelListIn.getBucketList(), display);
++            displayPlaces(travelListIn.getBucketList());
+         }
+     }
+ 
+ //    @Override
+-//    public void update(State state, boolean boo) {
+-//        if (state ==)
++//    public void update(State state, boolean display) {
++//        if (state == State.VISITED) {
++//            displayPlaces(travelListIn.getVisitedList(), display);
++//        } else {
++//            displayPlaces(travelListIn.getBucketList(), display);
++//        }
+ //    }
++
+ 
+     // MODIFIES: this
+     // EFFECTS: add markers to map corresponding to the GeoPoint for all places in the parameter
+-    private void displayPlaces(List<PlaceOfInterest> places, boolean display) {
++    private void displayPlaces(List<PlaceOfInterest> places) {
+         Set<Waypoint> markers = new HashSet<>();
+ 
+         for (PlaceOfInterest p : places) {
+@@ -171,9 +174,8 @@
+ 
+         WaypointPainter<Waypoint> waypointPainter = new WaypointPainter<>();
+         waypointPainter.setWaypoints(markers);
+-        if (display) {
+-            mapViewer.setOverlayPainter(waypointPainter);
+-        }
++        mapViewer.setOverlayPainter(waypointPainter);
++
+ 
+     }
+ 
+Index: src/main/ui/gui/ControlPanel.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package ui.gui;\r\n\r\nimport model.State;\r\n\r\nimport javax.swing.*;\r\nimport java.awt.event.ActionEvent;\r\nimport java.awt.event.ActionListener;\r\nimport java.awt.event.ItemEvent;\r\nimport java.awt.event.ItemListener;\r\nimport java.util.ArrayList;\r\nimport java.util.List;\r\n\r\npublic class ControlPanel extends JPanel {\r\n\r\n    private static final int GAP = 10;  // vertical spacing between components in pixels\r\n    private ISelectionListener selectionListener;\r\n    private List<JCheckBox> checkBoxes;\r\n\r\n    // EFFECTS: constructs panel for displaying user controls\r\n    public ControlPanel(ISelectionListener selectionListener) {\r\n\r\n        this.selectionListener = selectionListener;\r\n        checkBoxes = new ArrayList<>();\r\n        Box toolHolder = Box.createVerticalBox();\r\n        addCheckBox(toolHolder);\r\n        toolHolder.add(Box.createVerticalStrut(GAP));\r\n        add(toolHolder);\r\n    }\r\n\r\n\r\n    // MODIFIES: toolHolder\r\n    // EFFECTS: adds radio buttons (visited list and bucket list) to toolHolder\r\n    private void addCheckBox(Box toolHolder) {\r\n        Box checkBoxHolder = Box.createHorizontalBox();\r\n        checkBoxHolder.setAlignmentX(Box.LEFT_ALIGNMENT);\r\n        toolHolder.add(checkBoxHolder);\r\n\r\n        JCheckBox visited = createVisitedBox();\r\n        JCheckBox bucket = createBucketBox();\r\n        checkBoxes.add(visited);\r\n        checkBoxes.add(bucket);\r\n        checkBoxHolder.add(visited);\r\n        checkBoxHolder.add(bucket);\r\n\r\n        toolHolder.add(checkBoxHolder);\r\n\r\n    }\r\n\r\n    // EFFECTS: returns radio button for \"visited list\" option\r\n    private JCheckBox createVisitedBox() {\r\n        JCheckBox visited = new JCheckBox(\"visited list\", false);\r\n//        visited.addActionListener(new ActionListener() {\r\n//            @Override\r\n//            public void actionPerformed(ActionEvent e) {\r\n//                selectionListener.update(State.VISITED);\r\n//            }\r\n//        });\r\n        visited.addItemListener(new ItemListener() {\r\n            @Override\r\n            public void itemStateChanged(ItemEvent e) {\r\n                selectionListener.update(State.VISITED, e.getStateChange() == ItemEvent.SELECTED);\r\n            }\r\n        });\r\n\r\n        return visited;\r\n    }\r\n\r\n\r\n    // EFFECTS: returns radio button for \"bucket list\" option\r\n    private JCheckBox createBucketBox() {\r\n        JCheckBox bucket = new JCheckBox(\"bucket list\", false);\r\n        bucket.addItemListener(new ItemListener() {\r\n            @Override\r\n            public void itemStateChanged(ItemEvent e) {\r\n                selectionListener.update(State.NotVISITED, e.getStateChange() == ItemEvent.SELECTED);\r\n            }\r\n        });\r\n//        bucket.addActionListener(new ActionListener() {\r\n//            @Override\r\n//            public void actionPerformed(ActionEvent e) {\r\n//                selectionListener.update(State.NotVISITED, e.g);\r\n//            }\r\n//        });\r\n\r\n        return bucket;\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/ui/gui/ControlPanel.java b/src/main/ui/gui/ControlPanel.java
+--- a/src/main/ui/gui/ControlPanel.java	(revision 7dc6c16868e7dedcc289791504ce959736b3ea06)
++++ b/src/main/ui/gui/ControlPanel.java	(date 1641681946260)
+@@ -5,8 +5,6 @@
+ import javax.swing.*;
+ import java.awt.event.ActionEvent;
+ import java.awt.event.ActionListener;
+-import java.awt.event.ItemEvent;
+-import java.awt.event.ItemListener;
+ import java.util.ArrayList;
+ import java.util.List;
+ 
+@@ -14,15 +12,15 @@
+ 
+     private static final int GAP = 10;  // vertical spacing between components in pixels
+     private ISelectionListener selectionListener;
+-    private List<JCheckBox> checkBoxes;
++    // private List<JRadioButton> JRadioButtons;
+ 
+     // EFFECTS: constructs panel for displaying user controls
+     public ControlPanel(ISelectionListener selectionListener) {
+ 
+         this.selectionListener = selectionListener;
+-        checkBoxes = new ArrayList<>();
++        // JRadioButtons = new ArrayList<>();
+         Box toolHolder = Box.createVerticalBox();
+-        addCheckBox(toolHolder);
++        addRadioButtons(toolHolder);
+         toolHolder.add(Box.createVerticalStrut(GAP));
+         add(toolHolder);
+     }
+@@ -30,35 +28,30 @@
+ 
+     // MODIFIES: toolHolder
+     // EFFECTS: adds radio buttons (visited list and bucket list) to toolHolder
+-    private void addCheckBox(Box toolHolder) {
+-        Box checkBoxHolder = Box.createHorizontalBox();
+-        checkBoxHolder.setAlignmentX(Box.LEFT_ALIGNMENT);
+-        toolHolder.add(checkBoxHolder);
++    private void addRadioButtons(Box toolHolder) {
++        Box radioButtonHolder = Box.createHorizontalBox();
++        radioButtonHolder.setAlignmentX(Box.LEFT_ALIGNMENT);
++        toolHolder.add(radioButtonHolder);
+ 
+-        JCheckBox visited = createVisitedBox();
+-        JCheckBox bucket = createBucketBox();
+-        checkBoxes.add(visited);
+-        checkBoxes.add(bucket);
+-        checkBoxHolder.add(visited);
+-        checkBoxHolder.add(bucket);
++        JRadioButton visited = createVisitedButton();
++        JRadioButton bucket = createBucketButton();
+ 
+-        toolHolder.add(checkBoxHolder);
++        radioButtonHolder.add(visited);
++        radioButtonHolder.add(bucket);
++
++        ButtonGroup radioBtnGroup = new ButtonGroup();
++        radioBtnGroup.add(visited);
++        radioBtnGroup.add(bucket);
+ 
+     }
+ 
+     // EFFECTS: returns radio button for "visited list" option
+-    private JCheckBox createVisitedBox() {
+-        JCheckBox visited = new JCheckBox("visited list", false);
+-//        visited.addActionListener(new ActionListener() {
+-//            @Override
+-//            public void actionPerformed(ActionEvent e) {
+-//                selectionListener.update(State.VISITED);
+-//            }
+-//        });
+-        visited.addItemListener(new ItemListener() {
++    private JRadioButton createVisitedButton() {
++        JRadioButton visited = new JRadioButton("visited places", false);
++        visited.addActionListener(new ActionListener() {
+             @Override
+-            public void itemStateChanged(ItemEvent e) {
+-                selectionListener.update(State.VISITED, e.getStateChange() == ItemEvent.SELECTED);
++            public void actionPerformed(ActionEvent e) {
++                selectionListener.update(State.VISITED);
+             }
+         });
+ 
+@@ -67,20 +60,15 @@
+ 
+ 
+     // EFFECTS: returns radio button for "bucket list" option
+-    private JCheckBox createBucketBox() {
+-        JCheckBox bucket = new JCheckBox("bucket list", false);
+-        bucket.addItemListener(new ItemListener() {
++    private JRadioButton createBucketButton() {
++        JRadioButton bucket = new JRadioButton("bucket places", false);
++
++        bucket.addActionListener(new ActionListener() {
+             @Override
+-            public void itemStateChanged(ItemEvent e) {
+-                selectionListener.update(State.NotVISITED, e.getStateChange() == ItemEvent.SELECTED);
++            public void actionPerformed(ActionEvent e) {
++                selectionListener.update(State.NotVISITED);
+             }
+         });
+-//        bucket.addActionListener(new ActionListener() {
+-//            @Override
+-//            public void actionPerformed(ActionEvent e) {
+-//                selectionListener.update(State.NotVISITED, e.g);
+-//            }
+-//        });
+ 
+         return bucket;
+     }
+Index: src/main/ui/gui/ISelectionListener.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package ui.gui;\r\n\r\nimport model.State;\r\n\r\nimport java.awt.*;\r\n\r\n/* CPSC 210 Term Project Version 2:\r\n * Travel Record - GUI - ISelectionListener\r\n * Author:  Yun Xing\r\n * Date:    January 07, 2022,\r\n * Apply Observer pattern - method update to be called when user select an alternative visiting status\r\n */\r\n\r\npublic interface ISelectionListener {\r\n\r\n    // called when visiting status selection has been changed\r\n    void update(State state, boolean display);\r\n\r\n//    void update(State state, boolean boo);\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/ui/gui/ISelectionListener.java b/src/main/ui/gui/ISelectionListener.java
+--- a/src/main/ui/gui/ISelectionListener.java	(revision 7dc6c16868e7dedcc289791504ce959736b3ea06)
++++ b/src/main/ui/gui/ISelectionListener.java	(date 1641682117194)
+@@ -14,7 +14,7 @@
+ public interface ISelectionListener {
+ 
+     // called when visiting status selection has been changed
+-    void update(State state, boolean display);
++    void update(State state);
+ 
+ //    void update(State state, boolean boo);
+ }

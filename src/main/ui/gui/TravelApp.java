@@ -142,8 +142,6 @@ public class TravelApp extends JFrame implements ISelectionListener {
         mapViewer.setAddressLocation(center);
     }
 
-
-
     @Override
     public void update(State state) {
         if (state == State.VISITED) {
@@ -152,6 +150,16 @@ public class TravelApp extends JFrame implements ISelectionListener {
             displayPlaces(travelListIn.getBucketList());
         }
     }
+
+//    @Override
+//    public void update(State state, boolean display) {
+//        if (state == State.VISITED) {
+//            displayPlaces(travelListIn.getVisitedList(), display);
+//        } else {
+//            displayPlaces(travelListIn.getBucketList(), display);
+//        }
+//    }
+
 
     // MODIFIES: this
     // EFFECTS: add markers to map corresponding to the GeoPoint for all places in the parameter
@@ -167,6 +175,8 @@ public class TravelApp extends JFrame implements ISelectionListener {
         WaypointPainter<Waypoint> waypointPainter = new WaypointPainter<>();
         waypointPainter.setWaypoints(markers);
         mapViewer.setOverlayPainter(waypointPainter);
+
+
     }
 
 

@@ -12,13 +12,12 @@ import java.util.List;
 public class ControlPanel extends JPanel {
 
     private static final int GAP = 10;  // vertical spacing between components in pixels
-    private SelectionState selectionState;
     private ISelectionListener selectionListener;
     private List<StateCheckBox> checkBoxes;
 
     // EFFECTS: constructs panel for displaying user controls
-    public ControlPanel(SelectionState selectionState, ISelectionListener selectionListener) {
-        this.selectionState = selectionState;
+    public ControlPanel(ISelectionListener selectionListener) {
+
         this.selectionListener = selectionListener;
         checkBoxes = new ArrayList<>();
         Box toolHolder = Box.createVerticalBox();
@@ -54,7 +53,6 @@ public class ControlPanel extends JPanel {
         visited.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                selectionState.setVisited();
                 selectionListener.update(State.VISITED);
             }
         });
@@ -69,7 +67,6 @@ public class ControlPanel extends JPanel {
         bucket.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                selectionState.setBucketed();
                 selectionListener.update(State.NotVISITED);
             }
         });

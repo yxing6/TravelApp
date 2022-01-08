@@ -27,7 +27,6 @@ public class TravelApp extends JFrame implements ISelectionListener {
     private JList jlist;
     private TravelList travelListIn;
     private TravelList travelListOut;
-    private SelectionState selectionState;
     private JXMapViewer mapViewer;
 
 
@@ -41,7 +40,7 @@ public class TravelApp extends JFrame implements ISelectionListener {
 
         buildMapViewer();
         add(BorderLayout.CENTER, mapViewer);
-        add(BorderLayout.EAST, new ControlPanel(selectionState, this));
+        add(BorderLayout.EAST, new ControlPanel(this));
         setResizable(false);
         pack();
         setLocationRelativeTo(null);
@@ -57,7 +56,6 @@ public class TravelApp extends JFrame implements ISelectionListener {
         jlist = new JList(listModel);
         travelListIn = new TravelList();
         travelListOut = new TravelList();
-        selectionState = new SelectionState(travelListIn);
     }
 
 
@@ -102,7 +100,6 @@ public class TravelApp extends JFrame implements ISelectionListener {
             JsonReader jsonReader = new JsonReader(JSON_STORE);
             travelListIn = jsonReader.read();
             travelListOut = travelListIn;
-            selectionState = new SelectionState(travelListIn);
             displayPlaces(travelListIn.getPlaces());
         } catch (IOException e) {
             System.out.println("Unable to read from file: " + JSON_STORE);

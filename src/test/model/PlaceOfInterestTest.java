@@ -16,7 +16,7 @@ class PlaceOfInterestTest {
     private static final double LAT = 49.2606;
     private static final double LON = -123.2460;
     private static final String VISITED = "Visited";
-    private static final String NotVISITED = "OnBucketList";
+    private static final String NotVISITED = "NotVisited";
 
 
     @BeforeEach

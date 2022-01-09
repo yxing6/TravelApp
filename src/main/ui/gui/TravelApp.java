@@ -17,22 +17,25 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class TravelApp extends JFrame implements StateSelectionListener {
+/* CPSC 210 Term Project Version 2:
+ * Travel Record - GUI - TravelApp
+ * Author:  Yun Xing
+ * Date:    January 08, 2022,
+ * Apply Observer pattern - method update to be called when changes are observed
+ */
+public class TravelApp extends JFrame implements StateListener {
 
     public static final int MAP_WIDTH = 1000;
     public static final int MAP_HEIGHT = 700;
     public static final String JSON_STORE = "./data/travels.json";
 
-    private DefaultListModel listModel;
-    private JList jlist;
-    private TravelList travelListIn;
-    private TravelList travelListOut;
+    private TravelList travelList = new TravelList();
     private JXMapViewer mapViewer;
 
 
+    // create main frame to display control panel and a world map
     public TravelApp() {
         super("Travel Tracker");
-        initContentFields();
         createMenu();
         setSize(WIDTH, HEIGHT);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -40,26 +43,12 @@ public class TravelApp extends JFrame implements StateSelectionListener {
 
         buildMapViewer();
         add(BorderLayout.CENTER, mapViewer);
-        add(BorderLayout.WEST, new ControlPanel(this, travelListIn));
-        // InfoWindow infoWindow = new InfoWindow(travelListIn, mapViewer);
-        // mapViewer.addMouseListener(infoWindow);
-        mapViewer.setLayout(new GridBagLayout());
-        //mapViewer.add(infoWindow);
+        add(BorderLayout.WEST, new ControlPanel(this));
+
         setResizable(false);
         pack();
         setLocationRelativeTo(null);
         setVisible(true);
-    }
-
-
-    // MODIFIES: this
-    // EFFECTS: initiate fields
-    public void initContentFields() {
-
-        listModel = new DefaultListModel();
-        jlist = new JList(listModel);
-        travelListIn = new TravelList();
-        travelListOut = new TravelList();
     }
 
 
@@ -102,9 +91,8 @@ public class TravelApp extends JFrame implements StateSelectionListener {
 
         try {
             JsonReader jsonReader = new JsonReader(JSON_STORE);
-            travelListIn = jsonReader.read();
-            travelListOut = travelListIn;
-            displayPlaces(travelListIn.getPlaces());
+            travelList = jsonReader.read();
+            displayPlaces(travelList.getPlaces());
         } catch (IOException e) {
             System.out.println("Unable to read from file: " + JSON_STORE);
             e.printStackTrace();
@@ -122,7 +110,7 @@ public class TravelApp extends JFrame implements StateSelectionListener {
         JsonWriter jsonWriter = new JsonWriter(JSON_STORE);
         try {
             jsonWriter.open();
-            jsonWriter.write(travelListOut);
+            jsonWriter.write(travelList);
             jsonWriter.close();
         } catch (FileNotFoundException e) {
             System.out.println("Unable to write to file: " + JSON_STORE);
@@ -146,32 +134,52 @@ public class TravelApp extends JFrame implements StateSelectionListener {
         mapViewer.setAddressLocation(center);
     }
 
+
+    // MODIFIES: this
+    // EFFECTS: adding one placeOfInterest to the travelList
     @Override
-    public void update(State state) {
-        if (state == State.VISITED) {
-            displayPlaces(travelListIn.getVisitedList());
+    public void update(PlaceOfInterest place) {
+        try {
+            travelList.addPlace(place);
+        } catch (Exception e) {
+            JFrame jframe = new JFrame();
+            JOptionPane.showMessageDialog(jframe, "place already exist in your list");
+        }
+        if (place.getVisitingStatus() == State.VISITED) {
+            displayPlaces(travelList.getVisitedList());
         } else {
-            displayPlaces(travelListIn.getBucketList());
+            displayPlaces(travelList.getBucketList());
         }
     }
 
+
+    // EFFECTS: display a selection of places based on the given State
+    @Override
+    public void update(State state) {
+        if (state == State.VISITED) {
+            displayPlaces(travelList.getVisitedList());
+        } else {
+            displayPlaces(travelList.getBucketList());
+        }
+    }
+
+
+    // EFFECTS: display all places in the travelList
     @Override
     public void update() {
-        displayPlaces(travelListIn.getPlaces());
+        displayPlaces(travelList.getPlaces());
     }
+
 
     // MODIFIES: this
     // EFFECTS: add markers to map corresponding to the GeoPoint for all places in the parameter
     private void displayPlaces(List<PlaceOfInterest> places) {
         Set<Waypoint> markers = new HashSet<>();
-        // Set<InfoWindow> infoWindows = new HashSet<>();
 
         for (PlaceOfInterest p : places) {
             GeoPoint geoPoint = p.getLocation();
             GeoPosition geoPosition = new GeoPosition(geoPoint.getLatitude(), geoPoint.getLongitude());
             markers.add(new DefaultWaypoint(geoPosition));
-            //mapViewer.add(new InfoWindow(p, mapViewer));
-            //infoWindows.add(new InfoWindow(p));
         }
 
         WaypointPainter<Waypoint> waypointPainter = new WaypointPainter<>();

@@ -238,6 +238,11 @@ public class ControlPanel extends JPanel {
             PlaceOfInterest place = new PlaceOfInterest(name, geoPoint);
             place.setVisitingStatus(state);
 
+            if (state == State.VISITED) {
+                visited.setSelected(true);
+            } else {
+                bucket.setSelected(true);
+            }
             selectionListener.update(place);
 
             nameEntry.setText("");

@@ -16,7 +16,7 @@ public class ControlPanel extends JPanel {
     private static final String ATB = "Add to bucket list";
     private static final String ATV = "Add to visited list";
 
-    private StateSelectionListener selectionListener;
+    private StateListener selectionListener;
     private TravelList travelList;
 
     private CustomizeJTextField nameEntry;
@@ -25,10 +25,9 @@ public class ControlPanel extends JPanel {
 
 
     // EFFECTS: constructs panel for displaying user controls
-    public ControlPanel(StateSelectionListener selectionListener, TravelList travelList) {
+    public ControlPanel(StateListener selectionListener) {
 
         this.selectionListener = selectionListener;
-        this.travelList = travelList;
 
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         add(Box.createVerticalStrut(GAP));
@@ -49,6 +48,7 @@ public class ControlPanel extends JPanel {
 
     // MODIFIES: this
     // EFFECTS: adds labels and text field for user entry to control panel
+    @SuppressWarnings({"checkstyle:MethodLength", "checkstyle:SuppressWarnings"})
     private void addUserEntryFields() {
         Box entryHolder = Box.createVerticalBox();
         entryHolder.setAlignmentX(Box.CENTER_ALIGNMENT);
@@ -93,38 +93,48 @@ public class ControlPanel extends JPanel {
             this.state = state;
         }
 
+        @SuppressWarnings({"checkstyle:MethodLength", "checkstyle:SuppressWarnings"})
         @Override
         public void actionPerformed(ActionEvent e) {
 
             String name = nameEntry.getText();
             if (name.equals("")) {
                 Toolkit.getDefaultToolkit().beep();
-                nameEntry.requestFocusInWindow();
-                // return;
+                JFrame jframe = new JFrame();
+                JOptionPane.showMessageDialog(jframe, "the name of a place of interest cannot be empty");
             }
 
             double lat = 0;
-            double lon = 0;
             try {
                 lat = Double.parseDouble(latEntry.getText());
+            } catch (NumberFormatException ex) {
+                Toolkit.getDefaultToolkit().beep();
+                JFrame jframe = new JFrame();
+                JOptionPane.showMessageDialog(jframe, "the latitude of a place need to be a number");
+                latEntry.requestFocusInWindow();
+            }
+
+            double lon = 0;
+            try {
                 lon = Double.parseDouble(lonEntry.getText());
             } catch (NumberFormatException ex) {
                 Toolkit.getDefaultToolkit().beep();
-                latEntry.requestFocusInWindow();
+                JFrame jframe = new JFrame();
+                JOptionPane.showMessageDialog(jframe, "the latitude of a place need to be a number");
                 lonEntry.requestFocusInWindow();
             }
 
             GeoPoint geoPoint = new GeoPoint(lat, lon);
             PlaceOfInterest place = new PlaceOfInterest(name, geoPoint);
             place.setVisitingStatus(state);
-            travelList.addPlace(place);
+
+            selectionListener.update(place);
 
             nameEntry.setText("");
             latEntry.setText("");
             lonEntry.setText("");
         }
     }
-
 
 
     // MODIFIES: this
@@ -156,7 +166,7 @@ public class ControlPanel extends JPanel {
     }
 
 
-    // EFFECTS: returns radio button for "visited list" option
+    // EFFECTS: returns radio button for "visited places" option
     private JRadioButton createVisitedButton() {
         JRadioButton visited = new JRadioButton("Visited places", false);
         visited.addActionListener(new ActionListener() {
@@ -165,12 +175,11 @@ public class ControlPanel extends JPanel {
                 selectionListener.update(State.VISITED);
             }
         });
-
         return visited;
     }
 
 
-    // EFFECTS: returns radio button for "bucket list" option
+    // EFFECTS: returns radio button for "bucket places" option
     private JRadioButton createBucketButton() {
         JRadioButton bucket = new JRadioButton("Bucket places", false);
 
@@ -180,11 +189,11 @@ public class ControlPanel extends JPanel {
                 selectionListener.update(State.NotVISITED);
             }
         });
-
         return bucket;
     }
 
 
+    // EFFECTS: returns radio button for "all places" option
     private JRadioButton createAllButton() {
         JRadioButton all = new JRadioButton("All places", false);
 

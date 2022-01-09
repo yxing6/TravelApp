@@ -34,7 +34,6 @@ public class TravelApp extends JFrame implements StateListener {
     // create main frame to display control panel and a world map
     public TravelApp() {
         super("Travel Tracker");
-        // createMenu();
         setSize(WIDTH, HEIGHT);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
@@ -49,29 +48,6 @@ public class TravelApp extends JFrame implements StateListener {
         setLocationRelativeTo(null);
         setVisible(true);
     }
-
-
-//    // MODIFIES: this
-//    // EFFECTS: initiate and set up a menu bar containing menuItems
-//    //          Each menuItem is associated with an ActionListener for file load and save
-//    public void createMenu() {
-//
-//        JMenuBar menuBar = new JMenuBar();
-//        JMenu topMenu = new JMenu("FILE");
-//        menuBar.add(topMenu);
-//
-//        JMenuItem load = new JMenuItem("LOAD");
-//        JMenuItem save = new JMenuItem("SAVE");
-//        topMenu.add(load);
-//        topMenu.add(save);
-//
-//        this.setJMenuBar(menuBar);
-//
-//        load.addActionListener(e -> loadTravelList());
-//
-//        save.addActionListener(e -> writeTravelList());
-//
-//    }
 
 
     // MODIFIES: this

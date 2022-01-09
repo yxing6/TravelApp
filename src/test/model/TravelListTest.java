@@ -36,21 +36,32 @@ public class TravelListTest {
     }
 
     @Test
-    void testAddOnePlace() {
-        travelList.addPlace(placeA);
-        assertEquals(1, travelList.getPlaces().size());
-        assertEquals(1, travelList.getBucketList().size());
-        assertEquals(0, travelList.getVisitedList().size());
+    void testAddOnePlaceForException() {
+        try {
+            travelList.addPlace(placeA);
+            assertEquals(1, travelList.getPlaces().size());
+            assertEquals(1, travelList.getBucketList().size());
+            assertEquals(0, travelList.getVisitedList().size());
+        } catch (Exception e) {
+            fail("Should not caught exception");
+        }
     }
 
     @Test
-    void testAddDupPlace() {
+    void testAddDupPlaceForException() {
         travelList.addPlace(placeA);
         PlaceOfInterest samePlace = new PlaceOfInterest("A", new GeoPoint(1, 2));
-        travelList.addPlace(samePlace);
-        assertEquals(1, travelList.getPlaces().size());
-        assertEquals(1, travelList.getBucketList().size());
-        assertEquals(0, travelList.getVisitedList().size());
+        try {
+            travelList.addPlace(samePlace);
+            fail("Should have caught exception");
+        } catch (Exception e) {
+            // expected
+        } finally {
+            assertEquals(1, travelList.getPlaces().size());
+            assertEquals(1, travelList.getBucketList().size());
+            assertEquals(0, travelList.getVisitedList().size());
+        }
+
     }
 
     @Test

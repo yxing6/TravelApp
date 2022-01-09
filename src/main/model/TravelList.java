@@ -31,7 +31,7 @@ public class TravelList implements Writable {
         if (!places.contains(place)) {
             return places.add(place);
         } else {
-            return false;
+            throw new IllegalArgumentException();
         }
     }
 

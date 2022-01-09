@@ -18,5 +18,30 @@
         "name": "Center of the earth",
         "location": "0.0/0.0",
         "status": "NotVISITED"
+    },
+    {
+        "name": "Sydney Opera House",
+        "location": "-33.8568/151.2153",
+        "status": "NotVISITED"
+    },
+    {
+        "name": "Hobbiton",
+        "location": "-37.9821/175.6829",
+        "status": "NotVISITED"
+    },
+    {
+        "name": "Santa Claus Village",
+        "location": "66.5436/25.8472",
+        "status": "NotVISITED"
+    },
+    {
+        "name": "Jasper",
+        "location": "52.8737/-118.0814",
+        "status": "VISITED"
+    },
+    {
+        "name": "Vancouver Island",
+        "location": "49.6506/-125.4494",
+        "status": "VISITED"
     }
 ]}

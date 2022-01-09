@@ -6,6 +6,7 @@ import model.State;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -21,8 +22,8 @@ import java.awt.event.ActionListener;
 public class ControlPanel extends JPanel {
 
     private static final int GAP = 10;  // vertical spacing between components in pixels
-    private static final String ATB = "Add to bucket list";
-    private static final String ATV = "Add to visited list";
+    private static final String BUCKET_LIST = "bucket list";
+    private static final String VISITED_LIST = "visited list";
 
     private StateListener selectionListener;
     private CustomizeJTextField nameEntry;
@@ -36,11 +37,12 @@ public class ControlPanel extends JPanel {
         this.selectionListener = selectionListener;
 
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        add(Box.createVerticalStrut(GAP * 4));
+        addRadioButtons();
         add(Box.createVerticalStrut(GAP));
         addUserEntryFields();
         add(Box.createVerticalStrut(GAP));
-        addRadioButtons();
-        add(Box.createVerticalStrut(GAP));
+
     }
 
 
@@ -48,8 +50,81 @@ public class ControlPanel extends JPanel {
     private static class CustomizeJTextField extends JTextField {
         private CustomizeJTextField() {
             super();
-            setMaximumSize(new Dimension(200, 30));
+            //setMaximumSize(new Dimension(200, 30));
+            setFont(new Font("Verdana", Font.PLAIN, 13));
         }
+    }
+
+
+    // MODIFIES: this
+    // EFFECTS: adds radio buttons (visited list and bucket list) to control panel
+    @SuppressWarnings({"checkstyle:MethodLength", "checkstyle:SuppressWarnings"})
+    private void addRadioButtons() {
+        Box radioButtonHolder = Box.createVerticalBox();
+        radioButtonHolder.setAlignmentX(Box.CENTER_ALIGNMENT);
+
+        JLabel label1 = new JLabel("  Welcome!");
+        label1.setFont(new Font("Verdana", Font.BOLD, 18));
+        JLabel label2 = new JLabel("  To Display places-");
+        label2.setFont(new Font("Verdana", Font.PLAIN, 14));
+        JLabel label3 = new JLabel("  Choose from: ");
+        label3.setFont(new Font("Verdana", Font.PLAIN, 14));
+        JRadioButton visited = createVisitedButton();
+        JRadioButton bucket = createBucketButton();
+        JRadioButton all = createAllButton();
+
+        radioButtonHolder.add(label1);
+        radioButtonHolder.add(Box.createVerticalStrut(GAP * 2));
+        radioButtonHolder.add(label2);
+        radioButtonHolder.add(Box.createVerticalStrut(5));
+        radioButtonHolder.add(label3);
+        radioButtonHolder.add(Box.createVerticalStrut(GAP));
+        radioButtonHolder.add(visited);
+        radioButtonHolder.add(Box.createVerticalStrut(GAP));
+        radioButtonHolder.add(bucket);
+        radioButtonHolder.add(Box.createVerticalStrut(GAP));
+        radioButtonHolder.add(all);
+        radioButtonHolder.add(Box.createVerticalStrut(GAP * 3));
+
+        ButtonGroup radioBtnGroup = new ButtonGroup();
+        radioBtnGroup.add(visited);
+        radioBtnGroup.add(bucket);
+        radioBtnGroup.add(all);
+
+        add(radioButtonHolder);
+    }
+
+
+    // MODIFIES: this
+    // EFFECTS: returns radio button for "visited places" option
+    //          also calling update with a state of visited
+    private JRadioButton createVisitedButton() {
+        JRadioButton visited = new JRadioButton("Visited places", false);
+        visited.setFont(new Font("Verdana", Font.PLAIN, 13));
+        visited.addActionListener(e -> selectionListener.update(State.VISITED));
+        return visited;
+    }
+
+
+    // MODIFIES: this
+    // EFFECTS: returns radio button for "bucket places" option
+    //          also calling update with a state of notVisited
+    private JRadioButton createBucketButton() {
+        JRadioButton bucket = new JRadioButton("Bucket places", false);
+        bucket.setFont(new Font("Verdana", Font.PLAIN, 13));
+        bucket.addActionListener(e -> selectionListener.update(State.NotVISITED));
+        return bucket;
+    }
+
+
+    // MODIFIES: this
+    // EFFECTS: returns radio button for "all places" option
+    //          also call the no parameter version of the update
+    private JRadioButton createAllButton() {
+        JRadioButton all = new JRadioButton("All places", false);
+        all.setFont(new Font("Verdana", Font.PLAIN, 13));
+        all.addActionListener(e -> selectionListener.update());
+        return all;
     }
 
 
@@ -57,41 +132,45 @@ public class ControlPanel extends JPanel {
     // EFFECTS: adds labels and text field for user entry to control panel
     @SuppressWarnings({"checkstyle:MethodLength", "checkstyle:SuppressWarnings"})
     private void addUserEntryFields() {
-        Box entryHolder = Box.createVerticalBox();
-        entryHolder.setAlignmentX(Box.CENTER_ALIGNMENT);
+        JPanel entryHolder = new JPanel();
+        entryHolder.setLayout(null);
 
-        JLabel nameLabel = new JLabel("Name");
-        JLabel latLabel = new JLabel("Latitude");
-        JLabel lonLabel = new JLabel("Longitude");
+        JLabel label1 = new JLabel("  To add a place-");
+        label1.setFont(new Font("Verdana", Font.PLAIN, 14));
+        JLabel label2 = new JLabel("  please enter its: ");
+        label2.setFont(new Font("Verdana", Font.PLAIN, 14));
+        JLabel nameLabel = new JLabel("Name: ");
+        nameLabel.setFont(new Font("Verdana", Font.PLAIN, 13));
+        JLabel latLabel = new JLabel("Latitude: ");
+        latLabel.setFont(new Font("Verdana", Font.PLAIN, 13));
+        JLabel lonLabel = new JLabel("Longitude: ");
+        lonLabel.setFont(new Font("Verdana", Font.PLAIN, 13));
+        JLabel addingLabel = new JLabel("Adding to: ");
+        addingLabel.setFont(new Font("Verdana", Font.PLAIN, 13));
         nameEntry = new CustomizeJTextField();
         latEntry = new CustomizeJTextField();
         lonEntry = new CustomizeJTextField();
 
         // instantiate AddingListener to add placeOfInterest to the travelList
-        JButton addBucket = new JButton(ATB);
+        JButton addBucket = new JButton(BUCKET_LIST);
         addBucket.addActionListener(new AddingListener(State.NotVISITED));
-        JButton addVisited = new JButton(ATV);
+        addBucket.setFont(new Font("Verdana", Font.PLAIN, 13));
+        JButton addVisited = new JButton(VISITED_LIST);
         addVisited.addActionListener(new AddingListener(State.VISITED));
-
+        addVisited.setFont(new Font("Verdana", Font.PLAIN, 13));
 
         // formatting
-        entryHolder.add(Box.createVerticalStrut(GAP));
-        entryHolder.add(nameLabel);
-        entryHolder.add(Box.createVerticalStrut(GAP));
-        entryHolder.add(nameEntry);
-        entryHolder.add(Box.createVerticalStrut(GAP * 2));
-        entryHolder.add(latLabel);
-        entryHolder.add(Box.createVerticalStrut(GAP));
-        entryHolder.add(latEntry);
-        entryHolder.add(Box.createVerticalStrut(GAP * 2));
-        entryHolder.add(lonLabel);
-        entryHolder.add(Box.createVerticalStrut(GAP));
-        entryHolder.add(lonEntry);
-        entryHolder.add(Box.createVerticalStrut(GAP * 3));
-        entryHolder.add(addBucket);
-        entryHolder.add(Box.createVerticalStrut(GAP * 3));
-        entryHolder.add(addVisited);
-        entryHolder.add(Box.createVerticalStrut(GAP * 4));
+        entryHolder.add(label1).setBounds(0, 0, 200, 20);
+        entryHolder.add(label2).setBounds(0, 25, 200, 20);
+        entryHolder.add(nameLabel).setBounds(10, 60, 120, 20);
+        entryHolder.add(nameEntry).setBounds(10, 85, 120, 30);
+        entryHolder.add(latLabel).setBounds(10, 125, 120, 20);
+        entryHolder.add(latEntry).setBounds(10, 150, 120, 30);
+        entryHolder.add(lonLabel).setBounds(10, 190, 120, 20);
+        entryHolder.add(lonEntry).setBounds(10, 215, 120, 30);
+        entryHolder.add(addingLabel).setBounds(10, 255, 120, 30);
+        entryHolder.add(addBucket).setBounds(10, 290, 120, 30);
+        entryHolder.add(addVisited).setBounds(10, 335, 120, 30);
 
         add(entryHolder);
     }
@@ -158,66 +237,5 @@ public class ControlPanel extends JPanel {
             latEntry.setText("");
             lonEntry.setText("");
         }
-    }
-
-
-    // MODIFIES: this
-    // EFFECTS: adds radio buttons (visited list and bucket list) to control panel
-    private void addRadioButtons() {
-        Box radioButtonHolder = Box.createVerticalBox();
-        radioButtonHolder.setAlignmentX(Box.CENTER_ALIGNMENT);
-
-        JLabel label = new JLabel("Visiting Status");
-        JRadioButton visited = createVisitedButton();
-        JRadioButton bucket = createBucketButton();
-        JRadioButton all = createAllButton();
-
-        radioButtonHolder.add(label);
-        radioButtonHolder.add(Box.createVerticalStrut(GAP));
-        radioButtonHolder.add(visited);
-        radioButtonHolder.add(Box.createVerticalStrut(GAP));
-        radioButtonHolder.add(bucket);
-        radioButtonHolder.add(Box.createVerticalStrut(GAP));
-        radioButtonHolder.add(all);
-        radioButtonHolder.add(Box.createVerticalStrut(GAP));
-
-        ButtonGroup radioBtnGroup = new ButtonGroup();
-        radioBtnGroup.add(visited);
-        radioBtnGroup.add(bucket);
-        radioBtnGroup.add(all);
-
-        add(radioButtonHolder);
-    }
-
-
-    // MODIFIES: this
-    // EFFECTS: returns radio button for "visited places" option
-    //          also calling update with a state of visited
-    private JRadioButton createVisitedButton() {
-        JRadioButton visited = new JRadioButton("Visited places", false);
-        visited.addActionListener(e -> selectionListener.update(State.VISITED));
-        return visited;
-    }
-
-
-    // MODIFIES: this
-    // EFFECTS: returns radio button for "bucket places" option
-    //          also calling update with a state of notVisited
-    private JRadioButton createBucketButton() {
-        JRadioButton bucket = new JRadioButton("Bucket places", false);
-
-        bucket.addActionListener(e -> selectionListener.update(State.NotVISITED));
-        return bucket;
-    }
-
-
-    // MODIFIES: this
-    // EFFECTS: returns radio button for "all places" option
-    //          also call the no parameter version of the update
-    private JRadioButton createAllButton() {
-        JRadioButton all = new JRadioButton("All places", false);
-
-        all.addActionListener(e -> selectionListener.update());
-        return all;
     }
 }

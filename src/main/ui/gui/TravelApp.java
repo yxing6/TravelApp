@@ -23,8 +23,8 @@ import java.util.Set;
  */
 public class TravelApp extends JFrame implements StateListener {
 
-    public static final int MAP_WIDTH = 1000;
-    public static final int MAP_HEIGHT = 700;
+    public static final int MAP_WIDTH = 1050;
+    public static final int MAP_HEIGHT = 750;
     public static final String JSON_STORE = "./data/travels.json";
 
     private TravelList travelList = new TravelList();

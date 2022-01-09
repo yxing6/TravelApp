@@ -17,7 +17,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class TravelApp extends JFrame implements ISelectionListener {
+public class TravelApp extends JFrame implements StateSelectionListener {
 
     public static final int MAP_WIDTH = 1000;
     public static final int MAP_HEIGHT = 700;
@@ -40,7 +40,7 @@ public class TravelApp extends JFrame implements ISelectionListener {
 
         buildMapViewer();
         add(BorderLayout.CENTER, mapViewer);
-        add(BorderLayout.EAST, new ControlPanel(this));
+        add(BorderLayout.WEST, new ControlPanel(this, travelListIn));
         // InfoWindow infoWindow = new InfoWindow(travelListIn, mapViewer);
         // mapViewer.addMouseListener(infoWindow);
         mapViewer.setLayout(new GridBagLayout());

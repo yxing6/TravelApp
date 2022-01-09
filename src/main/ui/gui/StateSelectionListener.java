@@ -9,7 +9,7 @@ import model.State;
  * Apply Observer pattern - method update to be called when user select an alternative visiting status
  */
 
-public interface ISelectionListener {
+public interface StateSelectionListener {
 
     // called when visiting status selection has been changed
     void update(State state);

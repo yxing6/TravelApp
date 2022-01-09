@@ -19,9 +19,9 @@ import java.util.Set;
 
 public class TravelApp extends JFrame implements ISelectionListener {
 
-    private static final int MAP_WIDTH = 1000;
-    private static final int MAP_HEIGHT = 700;
-    private static final String JSON_STORE = "./data/travels.json";
+    public static final int MAP_WIDTH = 1000;
+    public static final int MAP_HEIGHT = 700;
+    public static final String JSON_STORE = "./data/travels.json";
 
     private DefaultListModel listModel;
     private JList jlist;
@@ -41,6 +41,10 @@ public class TravelApp extends JFrame implements ISelectionListener {
         buildMapViewer();
         add(BorderLayout.CENTER, mapViewer);
         add(BorderLayout.EAST, new ControlPanel(this));
+        // InfoWindow infoWindow = new InfoWindow(travelListIn, mapViewer);
+        // mapViewer.addMouseListener(infoWindow);
+        mapViewer.setLayout(new GridBagLayout());
+        //mapViewer.add(infoWindow);
         setResizable(false);
         pack();
         setLocationRelativeTo(null);
@@ -160,17 +164,19 @@ public class TravelApp extends JFrame implements ISelectionListener {
     // EFFECTS: add markers to map corresponding to the GeoPoint for all places in the parameter
     private void displayPlaces(List<PlaceOfInterest> places) {
         Set<Waypoint> markers = new HashSet<>();
+        // Set<InfoWindow> infoWindows = new HashSet<>();
 
         for (PlaceOfInterest p : places) {
             GeoPoint geoPoint = p.getLocation();
             GeoPosition geoPosition = new GeoPosition(geoPoint.getLatitude(), geoPoint.getLongitude());
             markers.add(new DefaultWaypoint(geoPosition));
+            //mapViewer.add(new InfoWindow(p, mapViewer));
+            //infoWindows.add(new InfoWindow(p));
         }
 
         WaypointPainter<Waypoint> waypointPainter = new WaypointPainter<>();
         waypointPainter.setWaypoints(markers);
         mapViewer.setOverlayPainter(waypointPainter);
-        
     }
 
 

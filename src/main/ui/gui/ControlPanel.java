@@ -120,7 +120,7 @@ public class ControlPanel extends JPanel {
     // EFFECTS: returns radio button for "all places" option
     //          also call the no parameter version of the update
     private JRadioButton createAllButton() {
-        JRadioButton all = new JRadioButton("All places", false);
+        JRadioButton all = new JRadioButton("All places", true);
         all.setFont(new Font("Verdana", Font.PLAIN, 13));
         all.addActionListener(e -> selectionListener.update());
         return all;

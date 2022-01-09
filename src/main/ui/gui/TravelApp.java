@@ -27,20 +27,21 @@ public class TravelApp extends JFrame implements StateListener {
     public static final int MAP_HEIGHT = 750;
     public static final String JSON_STORE = "./data/travels.json";
 
-    private TravelList travelList = new TravelList();
+    private TravelList travelList;
     private JXMapViewer mapViewer;
 
 
     // create main frame to display control panel and a world map
     public TravelApp() {
         super("Travel Tracker");
-        createMenu();
+        // createMenu();
         setSize(WIDTH, HEIGHT);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
-
+        loadTravelList();
         buildMapViewer();
         add(BorderLayout.CENTER, mapViewer);
+        displayPlaces(travelList.getPlaces());
         add(BorderLayout.WEST, new ControlPanel(this));
 
         setResizable(false);
@@ -50,27 +51,27 @@ public class TravelApp extends JFrame implements StateListener {
     }
 
 
-    // MODIFIES: this
-    // EFFECTS: initiate and set up a menu bar containing menuItems
-    //          Each menuItem is associated with an ActionListener for file load and save
-    public void createMenu() {
-
-        JMenuBar menuBar = new JMenuBar();
-        JMenu topMenu = new JMenu("FILE");
-        menuBar.add(topMenu);
-
-        JMenuItem load = new JMenuItem("LOAD");
-        JMenuItem save = new JMenuItem("SAVE");
-        topMenu.add(load);
-        topMenu.add(save);
-
-        this.setJMenuBar(menuBar);
-
-        load.addActionListener(e -> loadTravelList());
-
-        save.addActionListener(e -> writeTravelList());
-
-    }
+//    // MODIFIES: this
+//    // EFFECTS: initiate and set up a menu bar containing menuItems
+//    //          Each menuItem is associated with an ActionListener for file load and save
+//    public void createMenu() {
+//
+//        JMenuBar menuBar = new JMenuBar();
+//        JMenu topMenu = new JMenu("FILE");
+//        menuBar.add(topMenu);
+//
+//        JMenuItem load = new JMenuItem("LOAD");
+//        JMenuItem save = new JMenuItem("SAVE");
+//        topMenu.add(load);
+//        topMenu.add(save);
+//
+//        this.setJMenuBar(menuBar);
+//
+//        load.addActionListener(e -> loadTravelList());
+//
+//        save.addActionListener(e -> writeTravelList());
+//
+//    }
 
 
     // MODIFIES: this
@@ -80,7 +81,6 @@ public class TravelApp extends JFrame implements StateListener {
         try {
             JsonReader jsonReader = new JsonReader(JSON_STORE);
             travelList = jsonReader.read();
-            displayPlaces(travelList.getPlaces());
         } catch (IOException e) {
             System.out.println("Unable to read from file: " + JSON_STORE);
             e.printStackTrace();
@@ -137,6 +137,15 @@ public class TravelApp extends JFrame implements StateListener {
             displayPlaces(travelList.getVisitedList());
         } else {
             displayPlaces(travelList.getBucketList());
+        }
+    }
+
+
+    // EFFECTS: save the app content to file
+    @Override
+    public void update(String string) {
+        if (string.equals("save")) {
+            writeTravelList();
         }
     }
 

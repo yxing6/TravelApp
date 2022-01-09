@@ -3,13 +3,21 @@ package ui.gui;
 import model.GeoPoint;
 import model.PlaceOfInterest;
 import model.State;
-import model.TravelList;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/* CPSC 210 Term Project Version 2:
+ * Travel Record - GUI - ControlPanel
+ * Author:  Yun Xing
+ * Date:    January 08, 2022,
+ * Note:    This class is adapted from project version 1 and CPSC 210 Lab 8 ResourceFinder
+ *
+ * This class handles all the user entry and user selection
+ * Observer pattern is applied to reduce coupling.
+ */
 public class ControlPanel extends JPanel {
 
     private static final int GAP = 10;  // vertical spacing between components in pixels
@@ -17,8 +25,6 @@ public class ControlPanel extends JPanel {
     private static final String ATV = "Add to visited list";
 
     private StateListener selectionListener;
-    private TravelList travelList;
-
     private CustomizeJTextField nameEntry;
     private CustomizeJTextField latEntry;
     private CustomizeJTextField lonEntry;
@@ -36,6 +42,7 @@ public class ControlPanel extends JPanel {
         addRadioButtons();
         add(Box.createVerticalStrut(GAP));
     }
+
 
     // An inner class for formatting
     private static class CustomizeJTextField extends JTextField {
@@ -59,11 +66,15 @@ public class ControlPanel extends JPanel {
         nameEntry = new CustomizeJTextField();
         latEntry = new CustomizeJTextField();
         lonEntry = new CustomizeJTextField();
+
+        // instantiate AddingListener to add placeOfInterest to the travelList
         JButton addBucket = new JButton(ATB);
         addBucket.addActionListener(new AddingListener(State.NotVISITED));
         JButton addVisited = new JButton(ATV);
         addVisited.addActionListener(new AddingListener(State.VISITED));
 
+
+        // formatting
         entryHolder.add(Box.createVerticalStrut(GAP));
         entryHolder.add(nameLabel);
         entryHolder.add(Box.createVerticalStrut(GAP));
@@ -85,6 +96,14 @@ public class ControlPanel extends JPanel {
         add(entryHolder);
     }
 
+
+    /* ControlPanel inner class - AddingListener
+     * Author:  Yun Xing
+     * Date:    January 08, 2022,
+     *
+     * This class create new placeOfInterest when adding buttons are clicked
+     * Observer pattern is applied to reduce coupling.
+     */
     private class AddingListener implements ActionListener {
 
         State state;
@@ -93,6 +112,11 @@ public class ControlPanel extends JPanel {
             this.state = state;
         }
 
+
+        // MODIFIES: this
+        // EFFECTS: checks all entry fields
+        //          if all parsing succeed, create a placeOfInterest and added to the TravelList by calling update;
+        //          if parsing failed, display error message in popup window
         @SuppressWarnings({"checkstyle:MethodLength", "checkstyle:SuppressWarnings"})
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -166,7 +190,9 @@ public class ControlPanel extends JPanel {
     }
 
 
+    // MODIFIES: this
     // EFFECTS: returns radio button for "visited places" option
+    //          also calling update with a state of visited
     private JRadioButton createVisitedButton() {
         JRadioButton visited = new JRadioButton("Visited places", false);
         visited.addActionListener(new ActionListener() {
@@ -179,7 +205,9 @@ public class ControlPanel extends JPanel {
     }
 
 
+    // MODIFIES: this
     // EFFECTS: returns radio button for "bucket places" option
+    //          also calling update with a state of notVisited
     private JRadioButton createBucketButton() {
         JRadioButton bucket = new JRadioButton("Bucket places", false);
 
@@ -193,7 +221,9 @@ public class ControlPanel extends JPanel {
     }
 
 
+    // MODIFIES: this
     // EFFECTS: returns radio button for "all places" option
+    //          also call the no parameter version of the update
     private JRadioButton createAllButton() {
         JRadioButton all = new JRadioButton("All places", false);
 

@@ -20,6 +20,9 @@ public interface StateListener {
     void update(State state);
 
 
+    // called when passing certain string
+    void update(String string);
+
     // called when user want to display all places
     void update();
 

@@ -37,7 +37,7 @@ public class ControlPanel extends JPanel {
         this.selectionListener = selectionListener;
 
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        add(Box.createVerticalStrut(GAP * 4));
+        add(Box.createVerticalStrut(GAP * 3));
         addRadioButtons();
         add(Box.createVerticalStrut(GAP));
         addUserEntryFields();
@@ -50,7 +50,6 @@ public class ControlPanel extends JPanel {
     private static class CustomizeJTextField extends JTextField {
         private CustomizeJTextField() {
             super();
-            //setMaximumSize(new Dimension(200, 30));
             setFont(new Font("Verdana", Font.PLAIN, 13));
         }
     }
@@ -74,9 +73,9 @@ public class ControlPanel extends JPanel {
         JRadioButton all = createAllButton();
 
         radioButtonHolder.add(label1);
-        radioButtonHolder.add(Box.createVerticalStrut(GAP * 2));
+        radioButtonHolder.add(Box.createVerticalStrut(GAP * 4));
         radioButtonHolder.add(label2);
-        radioButtonHolder.add(Box.createVerticalStrut(5));
+        radioButtonHolder.add(Box.createVerticalStrut(GAP));
         radioButtonHolder.add(label3);
         radioButtonHolder.add(Box.createVerticalStrut(GAP));
         radioButtonHolder.add(visited);
@@ -147,6 +146,7 @@ public class ControlPanel extends JPanel {
         lonLabel.setFont(new Font("Verdana", Font.PLAIN, 13));
         JLabel addingLabel = new JLabel("Adding to: ");
         addingLabel.setFont(new Font("Verdana", Font.PLAIN, 13));
+
         nameEntry = new CustomizeJTextField();
         latEntry = new CustomizeJTextField();
         lonEntry = new CustomizeJTextField();
@@ -158,6 +158,11 @@ public class ControlPanel extends JPanel {
         JButton addVisited = new JButton(VISITED_LIST);
         addVisited.addActionListener(new AddingListener(State.VISITED));
         addVisited.setFont(new Font("Verdana", Font.PLAIN, 13));
+
+        // instantiate SavingListener to save the travelList
+        JButton saveButton = new JButton("SAVE");
+        saveButton.addActionListener(new SavingListener());
+        saveButton.setFont(new Font("Verdana", Font.PLAIN, 13));
 
         // formatting
         entryHolder.add(label1).setBounds(0, 0, 200, 20);
@@ -171,6 +176,7 @@ public class ControlPanel extends JPanel {
         entryHolder.add(addingLabel).setBounds(10, 255, 120, 30);
         entryHolder.add(addBucket).setBounds(10, 290, 120, 30);
         entryHolder.add(addVisited).setBounds(10, 335, 120, 30);
+        entryHolder.add(saveButton).setBounds(40, 410, 80, 30);
 
         add(entryHolder);
     }
@@ -236,6 +242,21 @@ public class ControlPanel extends JPanel {
             nameEntry.setText("");
             latEntry.setText("");
             lonEntry.setText("");
+        }
+    }
+
+
+    /* ControlPanel inner class - SaveListener
+     * Author:  Yun Xing
+     * Date:    January 09, 2022,
+     *
+     * This class simply call the update method passing a string as argument
+     * Observer pattern is applied to reduce coupling.
+     */
+    private class SavingListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            selectionListener.update("save");
         }
     }
 }

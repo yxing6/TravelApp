@@ -195,12 +195,7 @@ public class ControlPanel extends JPanel {
     //          also calling update with a state of visited
     private JRadioButton createVisitedButton() {
         JRadioButton visited = new JRadioButton("Visited places", false);
-        visited.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                selectionListener.update(State.VISITED);
-            }
-        });
+        visited.addActionListener(e -> selectionListener.update(State.VISITED));
         return visited;
     }
 
@@ -211,12 +206,7 @@ public class ControlPanel extends JPanel {
     private JRadioButton createBucketButton() {
         JRadioButton bucket = new JRadioButton("Bucket places", false);
 
-        bucket.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                selectionListener.update(State.NotVISITED);
-            }
-        });
+        bucket.addActionListener(e -> selectionListener.update(State.NotVISITED));
         return bucket;
     }
 
@@ -227,12 +217,7 @@ public class ControlPanel extends JPanel {
     private JRadioButton createAllButton() {
         JRadioButton all = new JRadioButton("All places", false);
 
-        all.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                selectionListener.update();
-            }
-        });
+        all.addActionListener(e -> selectionListener.update());
         return all;
     }
 }

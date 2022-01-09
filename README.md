@@ -14,4 +14,4 @@ I believe the new design will reduce the coupling between classes and lower the 
 The picture below is a screenshot of project GUI on January 09, 2022.    
   
   
-<img src="TravelApp_2022-01-09.jpg" alt="drawing" width="650"/>
+<img src="TravelApp_2022-01-09.jpg" alt="drawing" width="500"/>

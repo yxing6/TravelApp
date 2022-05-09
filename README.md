@@ -1,4 +1,4 @@
-**My Personal Project**
+### Welcome to my Java personal project
 
 This is the updated version of my first Java Gui project.   
 

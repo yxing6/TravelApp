@@ -43,5 +43,40 @@
         "name": "Vancouver Island",
         "location": "49.6506/-125.4494",
         "status": "VISITED"
+    },
+    {
+        "name": "Disneyland",
+        "location": "33.8121/-117.919",
+        "status": "VISITED"
+    },
+    {
+        "name": "Centry Park - NY city",
+        "location": "40.7812/-73.9665",
+        "status": "VISITED"
+    },
+    {
+        "name": "Iowa city ",
+        "location": "41.6611/-91.5302",
+        "status": "VISITED"
+    },
+    {
+        "name": "Rankin Inlet",
+        "location": "62.8084/-92.0853",
+        "status": "VISITED"
+    },
+    {
+        "name": "Yellowknife",
+        "location": "62.454/-114.3718",
+        "status": "VISITED"
+    },
+    {
+        "name": "Prince George",
+        "location": "53.9171/-122.7497",
+        "status": "VISITED"
+    },
+    {
+        "name": "Edmonton",
+        "location": "53.5461/-113.4937",
+        "status": "VISITED"
     }
 ]}

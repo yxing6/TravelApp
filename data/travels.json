@@ -12,7 +12,7 @@
     {
         "name": "Golden Gate Bridge",
         "location": "37.8199/-122.4783",
-        "status": "NotVISITED"
+        "status": "VISITED"
     },
     {
         "name": "Center of the earth",

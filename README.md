@@ -18,4 +18,4 @@ The design applied the observer pattern to reduce coupling.
 The picture below is a screenshot of project GUI on January 09, 2022.    
   
   
-<img src="TravelApp_2022-01-09.jpg" alt="drawing" width="500"/>
+<img src="TravelApp_2022-09-05.jpg" alt="drawing" width="500"/>

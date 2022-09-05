@@ -15,7 +15,7 @@ This app will automatically update the map image and track all the information p
 The design is meant to be more robust - it can handle non-meaningful keyboard console entries.   
 The design applied the observer pattern to reduce coupling. 
 
-The picture below is a screenshot of project GUI on January 09, 2022.    
+The picture below is a screenshot of project GUI on JSeptember 5, 2022.    
   
   
 <img src="TravelApp_2022-09-05.jpg" alt="drawing" width="500"/>

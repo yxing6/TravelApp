@@ -78,5 +78,45 @@
         "name": "Edmonton",
         "location": "53.5461/-113.4937",
         "status": "VISITED"
+    },
+    {
+        "name": "Churchill",
+        "location": "58.7679/-94.1696",
+        "status": "VISITED"
+    },
+    {
+        "name": "Winnipeg",
+        "location": "49.8954/-97.1385",
+        "status": "VISITED"
+    },
+    {
+        "name": "XinJiang",
+        "location": "43.7934/87.6271",
+        "status": "VISITED"
+    },
+    {
+        "name": "ChongQing",
+        "location": "29.5657/106.5512",
+        "status": "VISITED"
+    },
+    {
+        "name": "ChengDu",
+        "location": "30.5732/104.0665",
+        "status": "VISITED"
+    },
+    {
+        "name": "Shanghai",
+        "location": "31.2304/121.4737",
+        "status": "VISITED"
+    },
+    {
+        "name": "Guangzhou",
+        "location": "23.1291/113.2644",
+        "status": "VISITED"
+    },
+    {
+        "name": "Zhengzhou",
+        "location": "34.7472/113.6249",
+        "status": "VISITED"
     }
 ]}
